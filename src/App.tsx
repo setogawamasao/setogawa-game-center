@@ -13,6 +13,7 @@ interface Ball {
   alive: boolean;
   points: number;
   color: string;
+  vanishPhase: number; // 0: normal, 1-30: vanishing
 }
 
 export default function App() {
@@ -131,6 +132,7 @@ export default function App() {
           alive: true,
           points,
           color,
+          vanishPhase: 0,
         });
       };
 
@@ -203,6 +205,51 @@ export default function App() {
         for (let i = balls.length - 1; i >= 0; i--) {
           const ball = balls[i];
 
+          // 消滅エフェクト中の処理
+          if (ball.vanishPhase > 0) {
+            ball.vanishPhase++;
+
+            // 消滅エフェクト（30フレーム）
+            if (ball.vanishPhase <= 30) {
+              const progress = ball.vanishPhase / 30;
+              const currentRadius = ball.radius * (1 - progress);
+              const opacity = 1 - progress;
+
+              // メインボール（消えながら小さくなる）
+              ctx2d.globalAlpha = opacity;
+              ctx2d.fillStyle = ball.color;
+              ctx2d.beginPath();
+              ctx2d.arc(ball.x, ball.y, currentRadius, 0, Math.PI * 2);
+              ctx2d.fill();
+
+              // パーティクル効果（浮かぶような感じ）
+              ctx2d.globalAlpha = opacity * 0.5;
+              const particles = 6;
+              for (let p = 0; p < particles; p++) {
+                const angle = (p / particles) * Math.PI * 2;
+                const distance = 40 * progress;
+                const px = ball.x + Math.cos(angle) * distance;
+                const py = ball.y + Math.sin(angle) * distance - 15 * progress;
+
+                ctx2d.fillStyle = ball.color;
+                ctx2d.beginPath();
+                ctx2d.arc(
+                  px,
+                  py,
+                  ball.radius * 0.25 * (1 - progress),
+                  0,
+                  Math.PI * 2
+                );
+                ctx2d.fill();
+              }
+
+              ctx2d.globalAlpha = 1;
+            } else {
+              ball.alive = false;
+            }
+            continue;
+          }
+
           if (!ball.alive) {
             balls.splice(i, 1);
             continue;
@@ -215,7 +262,7 @@ export default function App() {
           if (res.landmarks.length > 0) {
             if (checkCollision(ball, res.landmarks[0])) {
               totalScore += ball.points;
-              ball.alive = false;
+              ball.vanishPhase = 1; // 消滅エフェクト開始
               continue;
             }
           }
