@@ -249,12 +249,69 @@ export default function App() {
             x: 1 - landmark.x,
           }));
 
-          // 左右反転して描画
-          drawer.drawLandmarks(flippedLm, {
-            color: "red",
-            lineWidth: 2,
-          });
-          drawer.drawConnectors(flippedLm, PoseLandmarker.POSE_CONNECTIONS);
+          // 鼻のランドマーク（インデックス4）を取得
+          const noseLandmark = flippedLm[4];
+          if (noseLandmark) {
+            const noseX = noseLandmark.x * displayWidth;
+            const noseY = noseLandmark.y * displayHeight;
+
+            // 鼻を中心に顔全体を隠す円形または楕円形を描画
+            const faceRadius = 120; // 顔の半径
+
+            // 顔を隠す円形を描画
+            ctx2d.fillStyle = "#000000"; // 黒色で顔を完全に隠す
+            ctx2d.beginPath();
+            ctx2d.arc(noseX, noseY, faceRadius, 0, Math.PI * 2);
+            ctx2d.fill();
+
+            // 顔らしいシルエットを描画（白色の目と口）
+            ctx2d.fillStyle = "#FFFFFF";
+
+            // 目のシルエット
+            const eyeRadius = 15;
+            const eyeDistance = 50;
+            ctx2d.beginPath();
+            ctx2d.arc(
+              noseX - eyeDistance,
+              noseY - 20,
+              eyeRadius,
+              0,
+              Math.PI * 2
+            );
+            ctx2d.fill();
+            ctx2d.beginPath();
+            ctx2d.arc(
+              noseX + eyeDistance,
+              noseY - 20,
+              eyeRadius,
+              0,
+              Math.PI * 2
+            );
+            ctx2d.fill();
+
+            // 口のシルエット
+            ctx2d.beginPath();
+            ctx2d.ellipse(noseX, noseY + 40, 40, 15, 0, 0, Math.PI * 2);
+            ctx2d.fill();
+          }
+
+          // 身体のランドマーク（インデックス11以降）を描画
+          const bodyLandmarks = flippedLm.slice(11);
+          if (bodyLandmarks.length > 0) {
+            drawer.drawLandmarks(bodyLandmarks, {
+              color: "red",
+              lineWidth: 2,
+            });
+          }
+
+          // 身体の接続（PoseLandmarker.POSE_CONNECTIONS）
+          // 顔以外のコネクタのみをフィルタリングして描画
+          const bodyConnections = PoseLandmarker.POSE_CONNECTIONS.filter(
+            (connection: any) => connection.start >= 11 && connection.end >= 11
+          );
+          if (bodyConnections.length > 0) {
+            drawer.drawConnectors(flippedLm, bodyConnections);
+          }
         }
 
         // スコア表示（右上）
