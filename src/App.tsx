@@ -19,6 +19,7 @@ export default function App() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const ballsRef = useRef<Ball[]>([]);
+  const restartRef = useRef<() => void>(() => {});
 
   useEffect(() => {
     let landmarker: PoseLandmarker | undefined;
@@ -75,10 +76,23 @@ export default function App() {
       const balls: Ball[] = [];
       let frameCount = 0;
       let totalScore = 0;
-      const startTime = Date.now();
+      let startTime = Date.now();
       const gameDuration = 30000; // 30秒
       let gameEnded = false;
       let finalScore = 0;
+      let buttonRect = { x: 0, y: 0, width: 0, height: 0 };
+
+      // リスタート関数
+      const restart = () => {
+        frameCount = 0;
+        totalScore = 0;
+        startTime = Date.now();
+        gameEnded = false;
+        finalScore = 0;
+        balls.length = 0; // ボールをすべてクリア
+      };
+
+      restartRef.current = restart;
 
       // ボール生成関数
       const spawnBall = () => {
@@ -276,6 +290,41 @@ export default function App() {
             displayWidth / 2,
             displayHeight / 2 + 50
           );
+
+          // リスタートボタン
+          const buttonWidth = 300;
+          const buttonHeight = 80;
+          const buttonX = displayWidth / 2 - buttonWidth / 2;
+          const buttonY = displayHeight / 2 + 150;
+
+          // ボタン背景
+          ctx2d.fillStyle = "#00FF00";
+          ctx2d.fillRect(buttonX, buttonY, buttonWidth, buttonHeight);
+
+          // ボタン枠
+          ctx2d.strokeStyle = "#FFFFFF";
+          ctx2d.lineWidth = 3;
+          ctx2d.strokeRect(buttonX, buttonY, buttonWidth, buttonHeight);
+
+          // ボタンテキスト
+          ctx2d.fillStyle = "#000000";
+          ctx2d.font = "bold 48px Arial";
+          ctx2d.textAlign = "center";
+          ctx2d.textBaseline = "middle";
+          ctx2d.fillText(
+            "RESTART",
+            displayWidth / 2,
+            buttonY + buttonHeight / 2
+          );
+
+          // クリック判定用にボタン情報を保存
+          buttonRect = {
+            x: buttonX,
+            y: buttonY,
+            width: buttonWidth,
+            height: buttonHeight,
+          };
+          canvasRef.current!.dataset.restartButton = JSON.stringify(buttonRect);
         }
 
         requestAnimationFrame(detect);
@@ -307,7 +356,40 @@ export default function App() {
       }}
     >
       <video ref={videoRef} style={{ display: "none" }} />
-      <canvas ref={canvasRef} style={{ display: "block" }} />
+      <canvas
+        ref={canvasRef}
+        style={{ display: "block", cursor: "pointer" }}
+        onClick={(e) => {
+          if (!canvasRef.current) return;
+          const buttonData = canvasRef.current.dataset.restartButton;
+          if (!buttonData) return;
+
+          try {
+            const button = JSON.parse(buttonData);
+            const rect = canvasRef.current.getBoundingClientRect();
+
+            // キャンバス内の相対座標を計算
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            console.log("Click coordinates:", { x, y });
+            console.log("Button rect:", button);
+
+            // ボタン範囲内をクリックしたか判定
+            if (
+              x >= button.x &&
+              x <= button.x + button.width &&
+              y >= button.y &&
+              y <= button.y + button.height
+            ) {
+              console.log("Button clicked - restarting game");
+              restartRef.current();
+            }
+          } catch (error) {
+            console.error("Click handler error:", error);
+          }
+        }}
+      />
     </div>
   );
 }
