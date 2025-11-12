@@ -126,7 +126,8 @@ export default function App() {
         if (!landmarks || landmarks.length === 0) return false;
 
         for (const landmark of landmarks) {
-          const landmarkX = landmark.x * displayWidth;
+          // ランドマークを左右反転
+          const landmarkX = (1 - landmark.x) * displayWidth;
           const landmarkY = landmark.y * displayHeight;
           const dist = distanceTo(ball.x, ball.y, landmarkX, landmarkY);
 
@@ -151,7 +152,18 @@ export default function App() {
         const res = landmarker.detectForVideo(videoRef.current, ts);
 
         ctx2d.clearRect(0, 0, canvas.width, canvas.height);
-        ctx2d.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
+
+        // ビデオを左右反転して描画
+        ctx2d.save();
+        ctx2d.scale(-1, 1);
+        ctx2d.drawImage(
+          videoRef.current,
+          -canvas.width,
+          0,
+          canvas.width,
+          canvas.height
+        );
+        ctx2d.restore();
 
         // ボール生成（毎フレーム一定確率）
         frameCount++;
@@ -202,11 +214,19 @@ export default function App() {
 
         if (res.landmarks.length) {
           const lm = res.landmarks[0];
-          drawer.drawLandmarks(lm, {
+
+          // ランドマークを左右反転
+          const flippedLm = lm.map((landmark: any) => ({
+            ...landmark,
+            x: 1 - landmark.x,
+          }));
+
+          // 左右反転して描画
+          drawer.drawLandmarks(flippedLm, {
             color: "red",
             lineWidth: 2,
           });
-          drawer.drawConnectors(lm, PoseLandmarker.POSE_CONNECTIONS);
+          drawer.drawConnectors(flippedLm, PoseLandmarker.POSE_CONNECTIONS);
         }
 
         // スコア表示（右上）
