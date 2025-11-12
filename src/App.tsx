@@ -11,6 +11,8 @@ interface Ball {
   radius: number;
   vy: number;
   alive: boolean;
+  points: number;
+  color: string;
 }
 
 export default function App() {
@@ -72,17 +74,45 @@ export default function App() {
 
       const balls: Ball[] = [];
       let frameCount = 0;
+      let totalScore = 0;
 
       // ボール生成関数
       const spawnBall = () => {
-        const ballRadius = 15;
+        const points = Math.floor(Math.random() * 10) * 10 + 10; // 10-100の10刻み
+        // スコアが高いほど小さく: 100点=10px, 10点=60px（2倍にした）
+        const ballRadius = (35 - (points / 10) * 3) * 2;
         const x = Math.random() * (displayWidth - ballRadius * 2) + ballRadius;
+
+        // スコアに応じた色
+        let color: string;
+        if (points === 100) {
+          color = "#FF0000"; // 赤（100点）
+        } else if (points === 90) {
+          color = "#FF7700"; // オレンジ（90点）
+        } else if (points === 80) {
+          color = "#FFFF00"; // 黄色（80点）
+        } else if (points === 70) {
+          color = "#00FF00"; // 緑（70点）
+        } else if (points === 60) {
+          color = "#00FFFF"; // シアン（60点）
+        } else if (points === 50) {
+          color = "#0000FF"; // 青（50点）
+        } else if (points === 40) {
+          color = "#7700FF"; // 紫（40点）
+        } else if (points === 30) {
+          color = "#FF00FF"; // マゼンタ（30点）
+        } else {
+          color = "#00FF00"; // 緑（10, 20点）
+        }
+
         balls.push({
           x,
           y: -ballRadius,
           radius: ballRadius,
           vy: 3,
           alive: true,
+          points,
+          color,
         });
       };
 
@@ -144,6 +174,7 @@ export default function App() {
           // 衝突判定
           if (res.landmarks.length > 0) {
             if (checkCollision(ball, res.landmarks[0])) {
+              totalScore += ball.points;
               ball.alive = false;
               continue;
             }
@@ -156,10 +187,17 @@ export default function App() {
           }
 
           // ボール描画
-          ctx2d.fillStyle = "#00FF00";
+          ctx2d.fillStyle = ball.color;
           ctx2d.beginPath();
           ctx2d.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
           ctx2d.fill();
+
+          // ボール上に点数表示
+          ctx2d.fillStyle = "#000000";
+          ctx2d.font = "bold 14px Arial";
+          ctx2d.textAlign = "center";
+          ctx2d.textBaseline = "middle";
+          ctx2d.fillText(String(ball.points), ball.x, ball.y);
         }
 
         if (res.landmarks.length) {
@@ -170,6 +208,14 @@ export default function App() {
           });
           drawer.drawConnectors(lm, PoseLandmarker.POSE_CONNECTIONS);
         }
+
+        // スコア表示（右上）
+        ctx2d.fillStyle = "#FFFFFF";
+        ctx2d.font = "bold 48px Arial";
+        ctx2d.textAlign = "right";
+        ctx2d.textBaseline = "top";
+        ctx2d.fillText(`Score: ${totalScore}`, displayWidth - 20, 20);
+
         requestAnimationFrame(detect);
       };
       detect();
