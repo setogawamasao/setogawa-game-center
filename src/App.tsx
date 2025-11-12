@@ -75,6 +75,10 @@ export default function App() {
       const balls: Ball[] = [];
       let frameCount = 0;
       let totalScore = 0;
+      const startTime = Date.now();
+      const gameDuration = 30000; // 30秒
+      let gameEnded = false;
+      let finalScore = 0;
 
       // ボール生成関数
       const spawnBall = () => {
@@ -148,6 +152,16 @@ export default function App() {
       const detect = () => {
         if (!videoRef.current || !landmarker) return;
 
+        // 経過時間を計算
+        const elapsedTime = Date.now() - startTime;
+        const remainingTime = Math.max(0, (gameDuration - elapsedTime) / 1000);
+
+        // ゲーム終了判定
+        if (!gameEnded && elapsedTime >= gameDuration) {
+          gameEnded = true;
+          finalScore = totalScore;
+        }
+
         const ts = performance.now();
         const res = landmarker.detectForVideo(videoRef.current, ts);
 
@@ -167,7 +181,7 @@ export default function App() {
 
         // ボール生成（毎フレーム一定確率）
         frameCount++;
-        if (frameCount % 30 === 0) {
+        if (frameCount % 30 === 0 && !gameEnded) {
           spawnBall();
         }
 
@@ -235,6 +249,34 @@ export default function App() {
         ctx2d.textAlign = "right";
         ctx2d.textBaseline = "top";
         ctx2d.fillText(`Score: ${totalScore}`, displayWidth - 20, 20);
+
+        // 時計表示（スコアの下）
+        ctx2d.font = "bold 40px Arial";
+        ctx2d.fillText(`${remainingTime.toFixed(1)}s`, displayWidth - 20, 80);
+
+        // ゲーム終了画面
+        if (gameEnded) {
+          // 半透明の黒背景
+          ctx2d.fillStyle = "rgba(0, 0, 0, 0.7)";
+          ctx2d.fillRect(0, 0, displayWidth, displayHeight);
+
+          // スコア表示（画面中央）
+          ctx2d.fillStyle = "#FFFFFF";
+          ctx2d.font = "bold 80px Arial";
+          ctx2d.textAlign = "center";
+          ctx2d.textBaseline = "middle";
+          ctx2d.fillText(
+            `GAME OVER`,
+            displayWidth / 2,
+            displayHeight / 2 - 100
+          );
+          ctx2d.font = "bold 60px Arial";
+          ctx2d.fillText(
+            `Final Score: ${finalScore}`,
+            displayWidth / 2,
+            displayHeight / 2 + 50
+          );
+        }
 
         requestAnimationFrame(detect);
       };
