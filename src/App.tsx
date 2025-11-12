@@ -39,6 +39,26 @@ export default function App() {
 
       // 描画コンテキスト
       const canvas = canvasRef.current!;
+      const video = videoRef.current!;
+
+      // ビデオの比率を計算
+      const videoAspectRatio = video.videoWidth / video.videoHeight;
+      const windowAspectRatio = window.innerWidth / window.innerHeight;
+
+      let displayWidth: number, displayHeight: number;
+
+      if (videoAspectRatio > windowAspectRatio) {
+        // ビデオが横長の場合
+        displayWidth = window.innerWidth;
+        displayHeight = window.innerWidth / videoAspectRatio;
+      } else {
+        // ビデオが縦長の場合
+        displayHeight = window.innerHeight;
+        displayWidth = window.innerHeight * videoAspectRatio;
+      }
+
+      canvas.width = displayWidth;
+      canvas.height = displayHeight;
       const ctx2d = canvas.getContext("2d")!;
 
       // GPU 描画を完全に使い切る場合は WebGL2 コンテキストも取得する
@@ -79,14 +99,27 @@ export default function App() {
   }, []);
 
   return (
-    <div>
+    <div
+      style={{
+        margin: 0,
+        padding: 0,
+        overflow: "hidden",
+        width: "100vw",
+        height: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "#000",
+      }}
+    >
       <video
         ref={videoRef}
-        width={640}
-        height={480}
         style={{ display: "none" }}
       />
-      <canvas ref={canvasRef} width={640} height={480} />
+      <canvas
+        ref={canvasRef}
+        style={{ display: "block" }}
+      />
     </div>
   );
 }
