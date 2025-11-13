@@ -2,12 +2,13 @@ import { useRef, useState } from "react";
 import Menu from "./Menu";
 import BallCatch from "./BallCatch";
 import HandLandmarkGame from "./HandLandmarkGame";
+import NewHandGame from "./NewHandGame";
 
 export default function App() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const restartRef = useRef<() => void>(() => {});
-  const [game, setGame] = useState<"menu" | "ball" | "hand">("menu");
+  const [game, setGame] = useState<"menu" | "ball" | "hand" | "new">("menu");
 
   return (
     <div
@@ -27,6 +28,7 @@ export default function App() {
         <Menu
           onStart={() => setGame("ball")}
           onHandLandmark={() => setGame("hand")}
+          onNew={() => setGame("new")}
         />
       ) : game === "ball" ? (
         <BallCatch
@@ -35,8 +37,10 @@ export default function App() {
           onRestart={() => setGame("menu")}
           restartRef={restartRef}
         />
-      ) : (
+      ) : game === "hand" ? (
         <HandLandmarkGame onReturn={() => setGame("menu")} />
+      ) : (
+        <NewHandGame onReturn={() => setGame("menu")} />
       )}
     </div>
   );

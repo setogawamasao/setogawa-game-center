@@ -1,9 +1,10 @@
 interface MenuProps {
   onStart: () => void;
   onHandLandmark: () => void;
+  onNew?: () => void;
 }
 
-export default function Menu({ onStart, onHandLandmark }: MenuProps) {
+export default function Menu({ onStart, onHandLandmark, onNew }: MenuProps) {
   const colors = [
     { bg: "#001100", color: "#00FF00", glow: "#00FF00" }, // グリーン
     { bg: "#000011", color: "#00FFFF", glow: "#00FFFF" }, // シアン
@@ -313,11 +314,18 @@ export default function Menu({ onStart, onHandLandmark }: MenuProps) {
           videoPath="/movies/HandLandmarkGame.mov"
         />
         <GameCard
+          title="NEW HAND"
+          description=""
+          explanation="新しい手認識ゲーム"
+          onClick={onNew || (() => {})}
+          colorIndex={2}
+        />
+        <GameCard
           title="COMING SOON"
           description=""
           explanation="お楽しみに!"
           onClick={() => {}}
-          colorIndex={2}
+          colorIndex={3}
         />
       </div>
 
