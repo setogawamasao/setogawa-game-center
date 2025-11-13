@@ -14,12 +14,14 @@ export default function Menu({ onStart, onHandLandmark }: MenuProps) {
   const GameCard = ({
     title,
     description,
+    explanation,
     onClick,
     colorIndex,
     videoPath,
   }: {
     title: string;
     description: string;
+    explanation?: string;
     onClick: () => void;
     colorIndex: number;
     videoPath?: string;
@@ -29,7 +31,7 @@ export default function Menu({ onStart, onHandLandmark }: MenuProps) {
       <div
         style={{
           position: "relative",
-          width: "140px",
+          width: "180px",
           display: "flex",
           flexDirection: "column",
           gap: "8px",
@@ -77,8 +79,8 @@ export default function Menu({ onStart, onHandLandmark }: MenuProps) {
           data-card
           style={{
             position: "relative",
-            width: "140px",
-            height: "100px",
+            width: "180px",
+            height: "130px",
             overflow: "hidden",
             borderRadius: "4px",
             border: `3px solid ${col.color}`,
@@ -136,13 +138,14 @@ export default function Menu({ onStart, onHandLandmark }: MenuProps) {
             cursor: "pointer",
             display: "flex",
             flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: "2px",
+            alignItems: "flex-start",
+            justifyContent: "flex-start",
+            gap: "4px",
             padding: 0,
             fontFamily: "'Courier New', monospace",
             color: col.color,
             textShadow: `0 0 10px ${col.glow}`,
+            textAlign: "left",
           }}
         >
           <div
@@ -167,6 +170,19 @@ export default function Menu({ onStart, onHandLandmark }: MenuProps) {
           >
             {description}
           </div>
+          {explanation && (
+            <div
+              style={{
+                fontSize: "8px",
+                fontWeight: "normal",
+                lineHeight: "1.2",
+                opacity: 0.9,
+                marginTop: "2px",
+              }}
+            >
+              {explanation}
+            </div>
+          )}
         </button>
       </div>
     );
@@ -281,28 +297,32 @@ export default function Menu({ onStart, onHandLandmark }: MenuProps) {
         }}
       >
         <GameCard
-          title="BALL"
-          description="CATCH"
+          title="BALL CATCH"
+          description=""
+          explanation="落ちてくるボールをキャッチするゲーム"
           onClick={onStart}
           colorIndex={0}
           videoPath="/movies/BallCatch.tsx.mov"
         />
         <GameCard
-          title="HAND"
-          description="LANDMARK"
+          title="HAND LANDMARK"
+          description=""
+          explanation="手の動きを認識してゲームをプレイ"
           onClick={onHandLandmark}
           colorIndex={1}
           videoPath="/movies/HandLandmarkGame.mov"
         />
         <GameCard
-          title="COMING"
-          description="SOON"
+          title="COMING SOON"
+          description=""
+          explanation="新しいゲームが来週登場!"
           onClick={() => {}}
           colorIndex={2}
         />
         <GameCard
-          title="COMING"
-          description="SOON"
+          title="COMING SOON"
+          description=""
+          explanation="お楽しみに!"
           onClick={() => {}}
           colorIndex={3}
         />
