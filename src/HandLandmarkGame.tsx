@@ -75,7 +75,7 @@ export default function HandLandmarkGame() {
         );
         ctx2d.restore();
 
-        // 画像を白黒にする
+        // 画像を白黒にして、ピクセル化する
         const imageData = ctx2d.getImageData(0, 0, canvas.width, canvas.height);
         const data = imageData.data;
 
@@ -120,17 +120,83 @@ export default function HandLandmarkGame() {
           }
         }
 
-        // グレースケール化
-        for (let i = 0; i < data.length; i += 4) {
-          if (!areaPixels.has(i)) {
-            // 領域外は白黒化
-            const r = data[i];
-            const g = data[i + 1];
-            const b = data[i + 2];
-            const gray = r * 0.299 + g * 0.587 + b * 0.114;
-            data[i] = gray;
-            data[i + 1] = gray;
-            data[i + 2] = gray;
+        // ピクセル化処理
+        const pixelSize = 8;
+        const hasRegion = regionPoints.length > 0;
+
+        for (let py = 0; py < canvas.height; py += pixelSize) {
+          for (let px = 0; px < canvas.width; px += pixelSize) {
+            let r = 0,
+              g = 0,
+              b = 0,
+              count = 0;
+            let isInArea = false;
+
+            // ピクセルブロック内の平均色を計算
+            for (let dy = 0; dy < pixelSize && py + dy < canvas.height; dy++) {
+              for (let dx = 0; dx < pixelSize && px + dx < canvas.width; dx++) {
+                const pixelIndex = ((py + dy) * canvas.width + (px + dx)) * 4;
+                r += data[pixelIndex];
+                g += data[pixelIndex + 1];
+                b += data[pixelIndex + 2];
+                if (areaPixels.has(pixelIndex)) {
+                  isInArea = true;
+                }
+                count++;
+              }
+            }
+
+            r = Math.round(r / count);
+            g = Math.round(g / count);
+            b = Math.round(b / count);
+
+            // 領域外のみグレースケール化
+            let finalR = r,
+              finalG = g,
+              finalB = b;
+            if (!isInArea) {
+              const gray = r * 0.299 + g * 0.587 + b * 0.114;
+              finalR = gray;
+              finalG = gray;
+              finalB = gray;
+            }
+
+            // 領域がある場合、領域内はピクセル化しない
+            if (hasRegion && isInArea) {
+              // 領域内はピクセルブロック単位ではなく、元の画像データをコピー
+              for (
+                let dy = 0;
+                dy < pixelSize && py + dy < canvas.height;
+                dy++
+              ) {
+                for (
+                  let dx = 0;
+                  dx < pixelSize && px + dx < canvas.width;
+                  dx++
+                ) {
+                  const pixelIndex = ((py + dy) * canvas.width + (px + dx)) * 4;
+                  // 元のデータをそのままにする（変更しない）
+                }
+              }
+            } else {
+              // ピクセルブロックを塗りつぶし
+              for (
+                let dy = 0;
+                dy < pixelSize && py + dy < canvas.height;
+                dy++
+              ) {
+                for (
+                  let dx = 0;
+                  dx < pixelSize && px + dx < canvas.width;
+                  dx++
+                ) {
+                  const pixelIndex = ((py + dy) * canvas.width + (px + dx)) * 4;
+                  data[pixelIndex] = finalR;
+                  data[pixelIndex + 1] = finalG;
+                  data[pixelIndex + 2] = finalB;
+                }
+              }
+            }
           }
         }
         ctx2d.putImageData(imageData, 0, 0);
