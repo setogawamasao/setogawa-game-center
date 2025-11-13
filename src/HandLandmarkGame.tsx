@@ -123,12 +123,16 @@ export default function HandLandmarkGame() {
         const hasRegion = regionPoints.length > 0;
 
         // サーモグラフィ色マップ関数
-        const getThermographyColor = (gray: number): [number, number, number] => {
+        const getThermographyColor = (
+          gray: number
+        ): [number, number, number] => {
           // 0-255のグレースケール値を色に変換
           // 暗い（0）: 紫 -> 青 -> 緑 -> 黄 -> 赤（明るい）
           const normalized = gray / 255;
 
-          let r = 0, g = 0, b = 0;
+          let r = 0,
+            g = 0,
+            b = 0;
 
           if (normalized < 0.2) {
             // 紫から青
