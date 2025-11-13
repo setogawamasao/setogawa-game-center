@@ -16,101 +16,159 @@ export default function Menu({ onStart, onHandLandmark }: MenuProps) {
     description,
     onClick,
     colorIndex,
+    videoPath,
   }: {
     title: string;
     description: string;
     onClick: () => void;
     colorIndex: number;
+    videoPath?: string;
   }) => {
     const col = colors[colorIndex];
     return (
-      <button
-        onClick={onClick}
+      <div
         style={{
-          width: "120px",
-          height: "120px",
-          backgroundColor: col.color,
-          border: `3px solid ${col.color}`,
-          cursor: "pointer",
+          position: "relative",
+          width: "140px",
           display: "flex",
           flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          gap: "6px",
-          transition: "all 0.1s",
-          padding: "8px",
-          boxSizing: "border-box",
-          position: "relative",
-          boxShadow: `0px 0px 10px 2px ${col.glow}, inset 0 0 5px rgba(${
-            col.color === "#00FF00"
-              ? "0, 255, 0"
-              : col.color === "#00FFFF"
-              ? "0, 255, 255"
-              : col.color === "#FF0080"
-              ? "255, 0, 128"
-              : "0, 255, 136"
-          }, 0.5)`,
-          fontFamily: "'Courier New', monospace",
-          background: col.bg,
-          color: col.color,
-          textShadow: `0 0 10px ${col.glow}`,
+          gap: "8px",
+          cursor: "pointer",
         }}
         onMouseEnter={(e) => {
-          e.currentTarget.style.boxShadow = `0px 0px 20px 4px ${
-            col.glow
-          }, inset 0 0 10px rgba(${
-            col.color === "#00FF00"
-              ? "0, 255, 0"
-              : col.color === "#00FFFF"
-              ? "0, 255, 255"
-              : col.color === "#FF0080"
-              ? "255, 0, 128"
-              : "0, 255, 136"
-          }, 0.7)`;
-          e.currentTarget.style.backgroundColor = col.color;
-          e.currentTarget.style.color = col.bg;
+          const cardDiv = e.currentTarget.querySelector(
+            "[data-card]"
+          ) as HTMLElement;
+          if (cardDiv) {
+            cardDiv.style.boxShadow = `0px 0px 20px 4px ${
+              col.glow
+            }, inset 0 0 10px rgba(${
+              col.color === "#00FF00"
+                ? "0, 255, 0"
+                : col.color === "#00FFFF"
+                ? "0, 255, 255"
+                : col.color === "#FF0080"
+                ? "255, 0, 128"
+                : "0, 255, 136"
+            }, 0.7)`;
+          }
         }}
         onMouseLeave={(e) => {
-          e.currentTarget.style.boxShadow = `0px 0px 10px 2px ${
-            col.glow
-          }, inset 0 0 5px rgba(${
-            col.color === "#00FF00"
-              ? "0, 255, 0"
-              : col.color === "#00FFFF"
-              ? "0, 255, 255"
-              : col.color === "#FF0080"
-              ? "255, 0, 128"
-              : "0, 255, 136"
-          }, 0.5)`;
-          e.currentTarget.style.backgroundColor = col.bg;
-          e.currentTarget.style.color = col.color;
+          const cardDiv = e.currentTarget.querySelector(
+            "[data-card]"
+          ) as HTMLElement;
+          if (cardDiv) {
+            cardDiv.style.boxShadow = `0px 0px 10px 2px ${
+              col.glow
+            }, inset 0 0 5px rgba(${
+              col.color === "#00FF00"
+                ? "0, 255, 0"
+                : col.color === "#00FFFF"
+                ? "0, 255, 255"
+                : col.color === "#FF0080"
+                ? "255, 0, 128"
+                : "0, 255, 136"
+            }, 0.5)`;
+          }
         }}
       >
+        {/* ビデオカード */}
         <div
+          data-card
           style={{
-            fontSize: "16px",
-            fontWeight: "bold",
-            textTransform: "uppercase",
-            letterSpacing: "1px",
-            lineHeight: "1.1",
-            fontFamily: "'Courier New', monospace",
+            position: "relative",
+            width: "140px",
+            height: "100px",
+            overflow: "hidden",
+            borderRadius: "4px",
+            border: `3px solid ${col.color}`,
+            boxShadow: `0px 0px 10px 2px ${col.glow}, inset 0 0 5px rgba(${
+              col.color === "#00FF00"
+                ? "0, 255, 0"
+                : col.color === "#00FFFF"
+                ? "0, 255, 255"
+                : col.color === "#FF0080"
+                ? "255, 0, 128"
+                : "0, 255, 136"
+            }, 0.5)`,
           }}
         >
-          {title}
+          {/* 背景 */}
+          <div
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              backgroundColor: col.bg,
+              zIndex: 0,
+            }}
+          />
+
+          {/* 動画プレビュー */}
+          {videoPath && (
+            <video
+              src={videoPath}
+              autoPlay
+              muted
+              loop
+              playsInline
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+                zIndex: 1,
+              }}
+            />
+          )}
         </div>
-        <div
+
+        {/* テキストセクション */}
+        <button
+          onClick={onClick}
           style={{
-            fontSize: "10px",
-            fontWeight: "bold",
-            textTransform: "uppercase",
-            letterSpacing: "0.5px",
-            lineHeight: "1",
+            background: "transparent",
+            border: "none",
+            cursor: "pointer",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "2px",
+            padding: 0,
             fontFamily: "'Courier New', monospace",
+            color: col.color,
+            textShadow: `0 0 10px ${col.glow}`,
           }}
         >
-          {description}
-        </div>
-      </button>
+          <div
+            style={{
+              fontSize: "14px",
+              fontWeight: "bold",
+              textTransform: "uppercase",
+              letterSpacing: "0.5px",
+              lineHeight: "1.1",
+            }}
+          >
+            {title}
+          </div>
+          <div
+            style={{
+              fontSize: "9px",
+              fontWeight: "bold",
+              textTransform: "uppercase",
+              letterSpacing: "0.3px",
+              lineHeight: "1",
+            }}
+          >
+            {description}
+          </div>
+        </button>
+      </div>
     );
   };
 
@@ -227,12 +285,14 @@ export default function Menu({ onStart, onHandLandmark }: MenuProps) {
           description="CATCH"
           onClick={onStart}
           colorIndex={0}
+          videoPath="/movies/BallCatch.tsx.mov"
         />
         <GameCard
           title="HAND"
           description="LANDMARK"
           onClick={onHandLandmark}
           colorIndex={1}
+          videoPath="/movies/HandLandmarkGame.mov"
         />
         <GameCard
           title="COMING"
