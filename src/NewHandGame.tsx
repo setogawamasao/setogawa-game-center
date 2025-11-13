@@ -120,9 +120,9 @@ export default function NewHandGame({ onReturn }: NewHandGameProps) {
 
         World.add(engine.world, walls);
 
-        // 5個のボール作成
+        // 10個のボール作成
         const balls: Matter.Body[] = [];
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < 10; i++) {
           const ball = Bodies.circle(
             canvasWidth / 2 + (Math.random() - 0.5) * 100,
             canvasHeight / 2 + (Math.random() - 0.5) * 100,
@@ -402,7 +402,6 @@ export default function NewHandGame({ onReturn }: NewHandGameProps) {
           <button
             onClick={() => {
               setGameOver(false);
-              window.location.reload();
             }}
             style={{
               padding: "15px 40px",
