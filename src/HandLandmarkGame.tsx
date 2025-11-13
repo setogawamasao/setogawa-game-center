@@ -75,6 +75,66 @@ export default function HandLandmarkGame() {
         );
         ctx2d.restore();
 
+        // 画像を白黒にする
+        const imageData = ctx2d.getImageData(0, 0, canvas.width, canvas.height);
+        const data = imageData.data;
+
+        // 領域内のピクセルを保存するための配列
+        const areaPixels = new Set<number>();
+
+        // 両手がある場合の領域を計算
+        let regionPoints: { x: number; y: number }[] = [];
+        if (res.landmarks && res.landmarks.length === 2) {
+          const hand1 = res.landmarks[0].map((lm) => ({
+            ...lm,
+            x: 1 - lm.x,
+          }));
+          const hand2 = res.landmarks[1].map((lm) => ({
+            ...lm,
+            x: 1 - lm.x,
+          }));
+
+          const thumb1 = hand1[4];
+          const index1 = hand1[8];
+          const thumb2 = hand2[4];
+          const index2 = hand2[8];
+
+          if (thumb1 && index1 && thumb2 && index2) {
+            regionPoints = [
+              { x: thumb1.x * displayWidth, y: thumb1.y * displayHeight },
+              { x: index1.x * displayWidth, y: index1.y * displayHeight },
+              { x: index2.x * displayWidth, y: index2.y * displayHeight },
+              { x: thumb2.x * displayWidth, y: thumb2.y * displayHeight },
+            ];
+
+            // 領域内のピクセルインデックスを計算
+            for (let i = 0; i < data.length; i += 4) {
+              const pixelIndex = i / 4;
+              const pixelX = pixelIndex % canvas.width;
+              const pixelY = Math.floor(pixelIndex / canvas.width);
+
+              if (isPointInPolygon(pixelX, pixelY, regionPoints)) {
+                areaPixels.add(i);
+              }
+            }
+          }
+        }
+
+        // グレースケール化
+        for (let i = 0; i < data.length; i += 4) {
+          if (!areaPixels.has(i)) {
+            // 領域外は白黒化
+            const r = data[i];
+            const g = data[i + 1];
+            const b = data[i + 2];
+            const gray = r * 0.299 + g * 0.587 + b * 0.114;
+            data[i] = gray;
+            data[i + 1] = gray;
+            data[i + 2] = gray;
+          }
+        }
+        ctx2d.putImageData(imageData, 0, 0);
+
         // ランドマーク描画
         if (res.landmarks && res.landmarks.length > 0) {
           for (const hand of res.landmarks) {
@@ -91,10 +151,83 @@ export default function HandLandmarkGame() {
               color: "orange",
               lineWidth: 2,
             });
+
+            // 親指と人差し指の方向を表す直線を描画
+            const thumbTip = flipped[4]; // 親指の先端
+            const indexTip = flipped[8]; // 人差し指の先端
+
+            if (thumbTip && indexTip) {
+              const x1 = thumbTip.x * displayWidth;
+              const y1 = thumbTip.y * displayHeight;
+              const x2 = indexTip.x * displayWidth;
+              const y2 = indexTip.y * displayHeight;
+
+              // 直線を描画
+              ctx2d.strokeStyle = "#FF00FF";
+              ctx2d.lineWidth = 4;
+              ctx2d.setLineDash([10, 5]);
+              ctx2d.beginPath();
+              ctx2d.moveTo(x1, y1);
+              ctx2d.lineTo(x2, y2);
+              ctx2d.stroke();
+              ctx2d.setLineDash([]);
+
+              // 方向を示す矢印を描画（人差し指側）
+              const angle = Math.atan2(y2 - y1, x2 - x1);
+              const arrowSize = 15;
+              ctx2d.fillStyle = "#FF00FF";
+              ctx2d.beginPath();
+              ctx2d.moveTo(x2, y2);
+              ctx2d.lineTo(
+                x2 - arrowSize * Math.cos(angle - Math.PI / 6),
+                y2 - arrowSize * Math.sin(angle - Math.PI / 6)
+              );
+              ctx2d.lineTo(
+                x2 - arrowSize * Math.cos(angle + Math.PI / 6),
+                y2 - arrowSize * Math.sin(angle + Math.PI / 6)
+              );
+              ctx2d.closePath();
+              ctx2d.fill();
+            }
+          }
+
+          // 両手がある場合、領域の枠線のみ描画
+          if (res.landmarks.length === 2 && regionPoints.length > 0) {
+            // 領域の枠線を描画
+            ctx2d.strokeStyle = "#FF00FF";
+            ctx2d.lineWidth = 3;
+            ctx2d.beginPath();
+            ctx2d.moveTo(regionPoints[0].x, regionPoints[0].y);
+            ctx2d.lineTo(regionPoints[1].x, regionPoints[1].y);
+            ctx2d.lineTo(regionPoints[2].x, regionPoints[2].y);
+            ctx2d.lineTo(regionPoints[3].x, regionPoints[3].y);
+            ctx2d.closePath();
+            ctx2d.stroke();
           }
         }
 
         requestAnimationFrame(detect);
+      };
+
+      // 点が多角形内にあるかを判定（レイキャスティング法）
+      const isPointInPolygon = (
+        x: number,
+        y: number,
+        polygon: { x: number; y: number }[]
+      ) => {
+        let inside = false;
+        for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
+          const xi = polygon[i].x,
+            yi = polygon[i].y;
+          const xj = polygon[j].x,
+            yj = polygon[j].y;
+
+          const intersect =
+            yi > y !== yj > y &&
+            x < ((xj - xi) * (y - yi)) / (yj - yi) + xi;
+          if (intersect) inside = !inside;
+        }
+        return inside;
       };
       detect();
     };
