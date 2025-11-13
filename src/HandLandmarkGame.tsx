@@ -75,7 +75,7 @@ export default function HandLandmarkGame() {
         );
         ctx2d.restore();
 
-        // 画像を白黒にして、ピクセル化する
+        // サーモグラフィ風の画像処理
         const imageData = ctx2d.getImageData(0, 0, canvas.width, canvas.height);
         const data = imageData.data;
 
@@ -120,85 +120,72 @@ export default function HandLandmarkGame() {
           }
         }
 
-        // ピクセル化処理
-        const pixelSize = 8;
         const hasRegion = regionPoints.length > 0;
 
-        for (let py = 0; py < canvas.height; py += pixelSize) {
-          for (let px = 0; px < canvas.width; px += pixelSize) {
-            let r = 0,
-              g = 0,
-              b = 0,
-              count = 0;
-            let isInArea = false;
+        // サーモグラフィ色マップ関数
+        const getThermographyColor = (gray: number): [number, number, number] => {
+          // 0-255のグレースケール値を色に変換
+          // 暗い（0）: 紫 -> 青 -> 緑 -> 黄 -> 赤（明るい）
+          const normalized = gray / 255;
 
-            // ピクセルブロック内の平均色を計算
-            for (let dy = 0; dy < pixelSize && py + dy < canvas.height; dy++) {
-              for (let dx = 0; dx < pixelSize && px + dx < canvas.width; dx++) {
-                const pixelIndex = ((py + dy) * canvas.width + (px + dx)) * 4;
-                r += data[pixelIndex];
-                g += data[pixelIndex + 1];
-                b += data[pixelIndex + 2];
-                if (areaPixels.has(pixelIndex)) {
-                  isInArea = true;
-                }
-                count++;
-              }
-            }
+          let r = 0, g = 0, b = 0;
 
-            r = Math.round(r / count);
-            g = Math.round(g / count);
-            b = Math.round(b / count);
+          if (normalized < 0.2) {
+            // 紫から青
+            const t = normalized / 0.2;
+            r = Math.round(128 + 127 * (1 - t));
+            g = 0;
+            b = 255;
+          } else if (normalized < 0.4) {
+            // 青から緑
+            const t = (normalized - 0.2) / 0.2;
+            r = 0;
+            g = Math.round(255 * t);
+            b = Math.round(255 * (1 - t));
+          } else if (normalized < 0.6) {
+            // 緑から黄
+            const t = (normalized - 0.4) / 0.2;
+            r = Math.round(255 * t);
+            g = 255;
+            b = 0;
+          } else if (normalized < 0.8) {
+            // 黄からオレンジ
+            const t = (normalized - 0.6) / 0.2;
+            r = 255;
+            g = Math.round(255 * (1 - t * 0.5));
+            b = 0;
+          } else {
+            // オレンジから赤
+            const t = (normalized - 0.8) / 0.2;
+            r = 255;
+            g = Math.round(100 * (1 - t));
+            b = 0;
+          }
 
-            // 領域外のみグレースケール化
-            let finalR = r,
-              finalG = g,
-              finalB = b;
-            if (!isInArea) {
-              const gray = r * 0.299 + g * 0.587 + b * 0.114;
-              finalR = gray;
-              finalG = gray;
-              finalB = gray;
-            }
+          return [r, g, b];
+        };
 
-            // 領域がある場合、領域内はピクセル化しない
-            if (hasRegion && isInArea) {
-              // 領域内はピクセルブロック単位ではなく、元の画像データをコピー
-              for (
-                let dy = 0;
-                dy < pixelSize && py + dy < canvas.height;
-                dy++
-              ) {
-                for (
-                  let dx = 0;
-                  dx < pixelSize && px + dx < canvas.width;
-                  dx++
-                ) {
-                  const pixelIndex = ((py + dy) * canvas.width + (px + dx)) * 4;
-                  // 元のデータをそのままにする（変更しない）
-                }
-              }
-            } else {
-              // ピクセルブロックを塗りつぶし
-              for (
-                let dy = 0;
-                dy < pixelSize && py + dy < canvas.height;
-                dy++
-              ) {
-                for (
-                  let dx = 0;
-                  dx < pixelSize && px + dx < canvas.width;
-                  dx++
-                ) {
-                  const pixelIndex = ((py + dy) * canvas.width + (px + dx)) * 4;
-                  data[pixelIndex] = finalR;
-                  data[pixelIndex + 1] = finalG;
-                  data[pixelIndex + 2] = finalB;
-                }
-              }
-            }
+        // サーモグラフィ処理
+        for (let i = 0; i < data.length; i += 4) {
+          const r = data[i];
+          const g = data[i + 1];
+          const b = data[i + 2];
+
+          // グレースケール値を計算
+          const gray = r * 0.299 + g * 0.587 + b * 0.114;
+
+          if (hasRegion && areaPixels.has(i)) {
+            // 領域内：カラーを維持（元のまま）
+            continue;
+          } else {
+            // 領域外：サーモグラフィ色に変換
+            const [thermoR, thermoG, thermoB] = getThermographyColor(gray);
+            data[i] = thermoR;
+            data[i + 1] = thermoG;
+            data[i + 2] = thermoB;
           }
         }
+
         ctx2d.putImageData(imageData, 0, 0);
 
         // ランドマーク描画
@@ -210,13 +197,27 @@ export default function HandLandmarkGame() {
               x: 1 - lm.x,
             }));
             drawer.drawLandmarks(flipped, {
-              color: "deepskyblue",
+              color: "white",
               lineWidth: 3,
             });
             drawer.drawConnectors(flipped, HandLandmarker.HAND_CONNECTIONS, {
-              color: "orange",
+              color: "black",
               lineWidth: 2,
             });
+
+            // 白丸を黒枠で縁取る
+            for (const landmark of flipped) {
+              const lmX = landmark.x * displayWidth;
+              const lmY = landmark.y * displayHeight;
+              const radius = 5;
+
+              // 黒い外枠
+              ctx2d.strokeStyle = "black";
+              ctx2d.lineWidth = 2;
+              ctx2d.beginPath();
+              ctx2d.arc(lmX, lmY, radius, 0, Math.PI * 2);
+              ctx2d.stroke();
+            }
 
             // 親指と人差し指の方向を表す直線を描画
             const thumbTip = flipped[4]; // 親指の先端
@@ -229,7 +230,7 @@ export default function HandLandmarkGame() {
               const y2 = indexTip.y * displayHeight;
 
               // 直線を描画
-              ctx2d.strokeStyle = "#FF00FF";
+              ctx2d.strokeStyle = "#000000";
               ctx2d.lineWidth = 4;
               ctx2d.setLineDash([10, 5]);
               ctx2d.beginPath();
@@ -241,7 +242,7 @@ export default function HandLandmarkGame() {
               // 方向を示す矢印を描画（人差し指側）
               const angle = Math.atan2(y2 - y1, x2 - x1);
               const arrowSize = 15;
-              ctx2d.fillStyle = "#FF00FF";
+              ctx2d.fillStyle = "#000000";
               ctx2d.beginPath();
               ctx2d.moveTo(x2, y2);
               ctx2d.lineTo(
@@ -260,7 +261,7 @@ export default function HandLandmarkGame() {
           // 両手がある場合、領域の枠線のみ描画
           if (res.landmarks.length === 2 && regionPoints.length > 0) {
             // 領域の枠線を描画
-            ctx2d.strokeStyle = "#FF00FF";
+            ctx2d.strokeStyle = "#000000";
             ctx2d.lineWidth = 3;
             ctx2d.beginPath();
             ctx2d.moveTo(regionPoints[0].x, regionPoints[0].y);
