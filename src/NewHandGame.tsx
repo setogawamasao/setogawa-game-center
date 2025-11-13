@@ -17,8 +17,16 @@ export default function NewHandGame({ onReturn }: NewHandGameProps) {
   const [score, setScore] = useState(0);
   const [gameActive, setGameActive] = useState(false);
   const [gameOver, setGameOver] = useState(false);
+  const [elapsedTime, setElapsedTime] = useState(0);
   const engineRef = useRef<Matter.Engine | null>(null);
   const ballsRef = useRef<Matter.Body[]>([]);
+  const gameStartTimeRef = useRef<number>(0);
+  const gameOverRef = useRef(false);
+
+  // gameOverRef を同期
+  useEffect(() => {
+    gameOverRef.current = gameOver;
+  }, [gameOver]);
 
   useEffect(() => {
     let landmarker: HandLandmarker | undefined;
@@ -124,8 +132,8 @@ export default function NewHandGame({ onReturn }: NewHandGameProps) {
         const balls: Matter.Body[] = [];
         for (let i = 0; i < 10; i++) {
           const ball = Bodies.circle(
-            canvasWidth / 2 + (Math.random() - 0.5) * 100,
-            canvasHeight / 2 + (Math.random() - 0.5) * 100,
+            canvasWidth - 50 + (Math.random() - 0.5) * 100,
+            50 + (Math.random() - 0.5) * 100,
             10,
             {
               restitution: 1, // 完全弾性衝突
@@ -147,6 +155,9 @@ export default function NewHandGame({ onReturn }: NewHandGameProps) {
         }
         ballsRef.current = balls;
 
+        // ゲーム開始時間を記録
+        gameStartTimeRef.current = performance.now();
+
         const ctx2d = canvas.getContext("2d")!;
 
         // カメラフレームのオフセットを計算
@@ -156,6 +167,13 @@ export default function NewHandGame({ onReturn }: NewHandGameProps) {
         const detect = () => {
           if (!videoRef.current || !landmarker || !faceLandmarker) return;
           const ts = performance.now();
+          
+          // 経過時間を計算（秒単位）GameOver時は停止
+          if (!gameOverRef.current) {
+            const elapsed = Math.floor((ts - gameStartTimeRef.current) / 1000);
+            setElapsedTime(elapsed);
+          }
+          
           const res = landmarker.detectForVideo(videoRef.current, ts);
           const faceRes = faceLandmarker.detectForVideo(videoRef.current, ts);
 
@@ -332,7 +350,7 @@ export default function NewHandGame({ onReturn }: NewHandGameProps) {
       if (animationFrameId) cancelAnimationFrame(animationFrameId);
       if (stream) stream.getTracks().forEach((track) => track.stop());
     };
-  }, [gameActive]);
+  }, [gameActive, gameOver]);
 
   return (
     <div
@@ -370,6 +388,23 @@ export default function NewHandGame({ onReturn }: NewHandGameProps) {
 
       {/* UI要素 */}
 
+      {/* 時間表示 */}
+      <div
+        style={{
+          position: "absolute",
+          top: "20px",
+          left: "20px",
+          fontSize: "32px",
+          fontWeight: "bold",
+          color: "#00FF00",
+          fontFamily: "'Courier New', monospace",
+          textShadow: "0 0 10px #00FF00",
+          zIndex: 10,
+        }}
+      >
+        TIME: {elapsedTime}s
+      </div>
+
       {/* ゲームオーバー画面 */}
       {gameOver && (
         <div
@@ -399,8 +434,23 @@ export default function NewHandGame({ onReturn }: NewHandGameProps) {
           >
             GAME OVER
           </div>
+          <div
+            style={{
+              fontSize: "32px",
+              fontWeight: "bold",
+              color: "#00FF00",
+              fontFamily: "'Courier New', monospace",
+              textShadow: "0 0 10px #00FF00",
+              marginBottom: "40px",
+            }}
+          >
+            TIME: {elapsedTime}s
+          </div>
           <button
             onClick={() => {
+              // ゲーム開始時間をリセット
+              gameStartTimeRef.current = performance.now();
+              setElapsedTime(0);
               setGameOver(false);
             }}
             style={{
