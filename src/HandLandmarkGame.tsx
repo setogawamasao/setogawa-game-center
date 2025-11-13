@@ -8,6 +8,7 @@ import {
 export default function HandLandmarkGame() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     let landmarker: HandLandmarker | undefined;
@@ -35,6 +36,7 @@ export default function HandLandmarkGame() {
 
       const canvas = canvasRef.current!;
       const video = videoRef.current!;
+      const container = containerRef.current!;
 
       // レイアウト調整
       const videoAspectRatio = video.videoWidth / video.videoHeight;
@@ -49,6 +51,8 @@ export default function HandLandmarkGame() {
       }
       canvas.width = displayWidth;
       canvas.height = displayHeight;
+      container.style.width = displayWidth + "px";
+      container.style.height = displayHeight + "px";
       const ctx2d = canvas.getContext("2d")!;
       const drawer = new DrawingUtils(ctx2d);
 
@@ -104,17 +108,18 @@ export default function HandLandmarkGame() {
   }, []);
 
   return (
-    <>
+    <div
+      ref={containerRef}
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        margin: "0 auto",
+        background: "#222",
+      }}
+    >
       <video ref={videoRef} style={{ display: "none" }} />
-      <canvas
-        ref={canvasRef}
-        style={{
-          display: "block",
-          width: "100vw",
-          height: "100vh",
-          background: "#222",
-        }}
-      />
-    </>
+      <canvas ref={canvasRef} style={{ display: "block" }} />
+    </div>
   );
 }
