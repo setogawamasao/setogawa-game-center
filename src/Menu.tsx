@@ -4,123 +4,115 @@ interface MenuProps {
 }
 
 export default function Menu({ onStart, onHandLandmark }: MenuProps) {
-  const isSmall = typeof window !== "undefined" && window.innerWidth < 600;
-  const gameSize = isSmall ? 120 : 160;
-  const gap = isSmall ? 12 : 20;
-  const titleSize = isSmall ? 36 : 48;
-  const subtitleSize = isSmall ? 32 : 40;
-  const subsubTitleSize = isSmall ? 24 : 32;
+  const colors = [
+    { bg: "#001100", color: "#00FF00", glow: "#00FF00" }, // グリーン
+    { bg: "#000011", color: "#00FFFF", glow: "#00FFFF" }, // シアン
+    { bg: "#110000", color: "#FF0080", glow: "#FF0080" }, // マゼンタ
+    { bg: "#001111", color: "#00FF88", glow: "#00FF88" }, // ライムグリーン
+  ];
 
   const GameCard = ({
     title,
     description,
-    colors,
     onClick,
+    colorIndex,
   }: {
     title: string;
     description: string;
-    colors: { bg: string; text: string; accent: string };
     onClick: () => void;
-  }) => (
-    <button
-      onClick={onClick}
-      style={{
-        width: `${gameSize}px`,
-        height: `${gameSize}px`,
-        backgroundColor: colors.bg,
-        border: "3px solid #000000",
-        borderRadius: "15px",
-        cursor: "pointer",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        gap: "4px",
-        transition: "all 0.15s",
-        padding: "10px",
-        boxSizing: "border-box",
-        position: "relative",
-        boxShadow: `
-          0 4px 0px #000000,
-          0 5px 10px rgba(0, 0, 0, 0.3),
-          inset 0 2px 0px rgba(255, 255, 255, 0.4)
-        `,
-        fontFamily: "'Comic Sans MS', 'Arial', sans-serif",
-        overflow: "hidden",
-      }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.transform = "translateY(-3px)";
-        e.currentTarget.style.boxShadow = `
-          0 6px 0px #000000,
-          0 7px 15px rgba(0, 0, 0, 0.4),
-          inset 0 2px 0px rgba(255, 255, 255, 0.4)
-        `;
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.transform = "translateY(0)";
-        e.currentTarget.style.boxShadow = `
-          0 4px 0px #000000,
-          0 5px 10px rgba(0, 0, 0, 0.3),
-          inset 0 2px 0px rgba(255, 255, 255, 0.4)
-        `;
-      }}
-    >
-      {/* KID CORE的な装飾小要素 */}
-      <div
+    colorIndex: number;
+  }) => {
+    const col = colors[colorIndex];
+    return (
+      <button
+        onClick={onClick}
         style={{
-          position: "absolute",
-          top: "-8px",
-          right: "-8px",
-          width: "16px",
-          height: "16px",
-          backgroundColor: colors.accent,
-          borderRadius: "50%",
-          border: "2px solid #000000",
-          boxShadow: "2px 2px 0px rgba(0, 0, 0, 0.3)",
+          width: "120px",
+          height: "120px",
+          backgroundColor: col.color,
+          border: `3px solid ${col.color}`,
+          cursor: "pointer",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: "6px",
+          transition: "all 0.1s",
+          padding: "8px",
+          boxSizing: "border-box",
+          position: "relative",
+          boxShadow: `0px 0px 10px 2px ${col.glow}, inset 0 0 5px rgba(${
+            col.color === "#00FF00"
+              ? "0, 255, 0"
+              : col.color === "#00FFFF"
+              ? "0, 255, 255"
+              : col.color === "#FF0080"
+              ? "255, 0, 128"
+              : "0, 255, 136"
+          }, 0.5)`,
+          fontFamily: "'Courier New', monospace",
+          background: col.bg,
+          color: col.color,
+          textShadow: `0 0 10px ${col.glow}`,
         }}
-      />
-      <div
-        style={{
-          position: "absolute",
-          bottom: "-6px",
-          left: "-6px",
-          width: "14px",
-          height: "14px",
-          backgroundColor: colors.accent,
-          transform: "rotate(45deg)",
-          border: "2px solid #000000",
+        onMouseEnter={(e) => {
+          e.currentTarget.style.boxShadow = `0px 0px 20px 4px ${
+            col.glow
+          }, inset 0 0 10px rgba(${
+            col.color === "#00FF00"
+              ? "0, 255, 0"
+              : col.color === "#00FFFF"
+              ? "0, 255, 255"
+              : col.color === "#FF0080"
+              ? "255, 0, 128"
+              : "0, 255, 136"
+          }, 0.7)`;
+          e.currentTarget.style.backgroundColor = col.color;
+          e.currentTarget.style.color = col.bg;
         }}
-      />
-
-      <div
-        style={{
-          fontSize: isSmall ? "20px" : "24px",
-          fontWeight: "900",
-          color: colors.text,
-          textTransform: "uppercase",
-          textShadow: "2px 2px 0px rgba(255, 255, 255, 0.7)",
-          letterSpacing: "0.5px",
-          lineHeight: "1.1",
-          transform: "rotate(-3deg)",
+        onMouseLeave={(e) => {
+          e.currentTarget.style.boxShadow = `0px 0px 10px 2px ${
+            col.glow
+          }, inset 0 0 5px rgba(${
+            col.color === "#00FF00"
+              ? "0, 255, 0"
+              : col.color === "#00FFFF"
+              ? "0, 255, 255"
+              : col.color === "#FF0080"
+              ? "255, 0, 128"
+              : "0, 255, 136"
+          }, 0.5)`;
+          e.currentTarget.style.backgroundColor = col.bg;
+          e.currentTarget.style.color = col.color;
         }}
       >
-        {title}
-      </div>
-      <div
-        style={{
-          fontSize: isSmall ? "8px" : "10px",
-          color: colors.text,
-          fontWeight: "bold",
-          textTransform: "uppercase",
-          letterSpacing: "0.3px",
-          lineHeight: "1",
-          transform: "rotate(2deg)",
-        }}
-      >
-        {description}
-      </div>
-    </button>
-  );
+        <div
+          style={{
+            fontSize: "16px",
+            fontWeight: "bold",
+            textTransform: "uppercase",
+            letterSpacing: "1px",
+            lineHeight: "1.1",
+            fontFamily: "'Courier New', monospace",
+          }}
+        >
+          {title}
+        </div>
+        <div
+          style={{
+            fontSize: "10px",
+            fontWeight: "bold",
+            textTransform: "uppercase",
+            letterSpacing: "0.5px",
+            lineHeight: "1",
+            fontFamily: "'Courier New', monospace",
+          }}
+        >
+          {description}
+        </div>
+      </button>
+    );
+  };
 
   return (
     <div
@@ -131,15 +123,15 @@ export default function Menu({ onStart, onHandLandmark }: MenuProps) {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        padding: isSmall ? "15px 10px" : "30px 20px",
+        padding: "30px 20px",
         boxSizing: "border-box",
         background: "#000000",
         position: "relative",
-        fontFamily: "'Comic Sans MS', 'Arial', sans-serif",
+        fontFamily: "'Courier New', monospace",
         overflow: "hidden",
       }}
     >
-      {/* 背景パターン - KID CORE的 */}
+      {/* スキャンライン効果 */}
       <div
         style={{
           position: "absolute",
@@ -147,140 +139,75 @@ export default function Menu({ onStart, onHandLandmark }: MenuProps) {
           left: "0",
           right: "0",
           bottom: "0",
-          background: "transparent",
+          backgroundImage:
+            "repeating-linear-gradient(0deg, rgba(0, 255, 0, 0.02) 0px, rgba(0, 255, 255, 0.02) 1px, transparent 2px, transparent 3px)",
           pointerEvents: "none",
           zIndex: 1,
+          animation: "scanlines 8s linear infinite",
         }}
       />
 
-      {/* パックマン風デコレーション - ドット */}
+      {/* インベーダーキャラクター装飾 - 上部左 */}
       <div
         style={{
           position: "absolute",
-          top: "15px",
-          left: "20px",
-          width: "20px",
-          height: "20px",
-          backgroundColor: "#FFFF00",
-          borderRadius: "50%",
-          zIndex: 2,
-        }}
-      />
-      <div
-        style={{
-          position: "absolute",
-          top: "40px",
-          right: "30px",
-          width: "15px",
-          height: "15px",
-          backgroundColor: "#FF1493",
-          borderRadius: "50%",
-          zIndex: 2,
-        }}
-      />
-      <div
-        style={{
-          position: "absolute",
-          bottom: "40px",
+          top: "20px",
           left: "30px",
-          width: "18px",
-          height: "18px",
-          backgroundColor: "#00FFFF",
-          borderRadius: "50%",
+          fontSize: "24px",
           zIndex: 2,
-        }}
-      />
-      <div
-        style={{
-          position: "absolute",
-          bottom: "30px",
-          right: "40px",
-          width: "16px",
-          height: "16px",
-          backgroundColor: "#FF69B4",
-          borderRadius: "50%",
-          zIndex: 2,
-        }}
-      />
-
-      {/* メインタイトルコンテナ */}
-      <div
-        style={{
-          position: "relative",
-          zIndex: 10,
-          marginBottom: "30px",
-          textAlign: "center",
-          background: "#FFFF00",
-          padding: isSmall ? "15px 25px" : "20px 40px",
-          borderRadius: "0px",
-          border: "4px solid #000000",
-          boxShadow: `
-            0 6px 0px #000000,
-            0 8px 15px rgba(0, 0, 0, 0.3)
-          `,
-          transform: "skewX(-5deg)",
+          animation: "invaderMove 2s ease-in-out infinite",
+          fontFamily: "'Courier New', monospace",
+          color: "#00FF00",
+          textShadow: "0 0 10px #00FF00",
         }}
       >
-        <div
-          style={{
-            fontSize: isSmall ? "36px" : "48px",
-            fontWeight: "900",
-            color: "#000000",
-            margin: 0,
-            textTransform: "uppercase",
-            letterSpacing: "2px",
-            textShadow: "3px 3px 0px rgba(0, 0, 0, 0.5)",
-            transform: "skewX(-5deg)",
-          }}
-        >
-          ゲーム
-        </div>
-        <div
-          style={{
-            fontSize: isSmall ? "32px" : "40px",
-            fontWeight: "900",
-            color: "#000000",
-            margin: "-5px 0 0 0",
-            textTransform: "uppercase",
-            letterSpacing: "1px",
-            textShadow: "3px 3px 0px rgba(0, 0, 0, 0.5)",
-            transform: "skewX(-5deg)",
-          }}
-        >
-          センター
-        </div>
-        <div
-          style={{
-            fontSize: isSmall ? "24px" : "32px",
-            fontWeight: "900",
-            color: "#000000",
-            margin: "0px 0 0 0",
-            textTransform: "uppercase",
-            letterSpacing: "1px",
-            textShadow: "3px 3px 0px rgba(0, 0, 0, 0.5)",
-            transform: "skewX(-5deg)",
-          }}
-        >
-          瀬戸川
-        </div>
+        ▓▓▓
+        <div style={{ letterSpacing: "3px" }}>▓ ▓</div>
+        ▓▓▓
       </div>
 
-      {/* サブタイトル */}
+      {/* インベーダーキャラクター装飾 - 上部右 */}
+      <div
+        style={{
+          position: "absolute",
+          top: "20px",
+          right: "30px",
+          fontSize: "24px",
+          zIndex: 2,
+          animation: "invaderMove 2.5s ease-in-out infinite reverse",
+          fontFamily: "'Courier New', monospace",
+          color: "#FF0080",
+          textShadow: "0 0 10px #FF0080",
+        }}
+      >
+        ▓▓▓
+        <div style={{ letterSpacing: "3px" }}>▓ ▓</div>
+        ▓▓▓
+      </div>
+
+      {/* メインタイトル */}
       <div
         style={{
           position: "relative",
           zIndex: 10,
-          fontSize: isSmall ? "14px" : "18px",
-          fontWeight: "900",
-          color: "#FFFF00",
-          marginBottom: "30px",
-          textTransform: "uppercase",
-          letterSpacing: "1px",
-          textShadow: "2px 2px 0px #000000",
-          transform: "skewX(-5deg)",
+          marginBottom: "50px",
+          textAlign: "center",
         }}
       >
-        ✨ PACMAN GAMEPARK ✨
+        <div
+          style={{
+            fontSize: "36px",
+            fontWeight: "bold",
+            letterSpacing: "3px",
+            marginBottom: "8px",
+            fontFamily: "'Courier New', monospace",
+            animation: "flicker 0.15s infinite",
+            color: "#00FF00",
+            textShadow: "0 0 10px #00FF00, 0 0 20px #00FFFF, 0 0 30px #FF0080",
+          }}
+        >
+          瀬戸川ゲームセンター
+        </div>
       </div>
 
       {/* ゲームグリッド */}
@@ -289,74 +216,90 @@ export default function Menu({ onStart, onHandLandmark }: MenuProps) {
           position: "relative",
           zIndex: 10,
           display: "grid",
-          gridTemplateColumns: `repeat(auto-fit, minmax(${gameSize}px, 1fr))`,
-          gap: `${gap}px`,
-          maxWidth: isSmall ? "100%" : "560px",
-          padding: isSmall ? "0 10px" : "0",
-          filter: "drop-shadow(3px 3px 0px rgba(0, 0, 0, 0.3))",
+          gridTemplateColumns: "repeat(2, 1fr)",
+          gap: "20px",
+          padding: "0 20px",
+          marginBottom: "30px",
         }}
       >
         <GameCard
           title="BALL"
           description="CATCH"
-          colors={{ bg: "#FFFF00", text: "#FF1493", accent: "#00FFFF" }}
           onClick={onStart}
+          colorIndex={0}
         />
         <GameCard
           title="HAND"
           description="LANDMARK"
-          colors={{ bg: "#00FFFF", text: "#FF1493", accent: "#FFFF00" }}
           onClick={onHandLandmark}
+          colorIndex={1}
         />
         <GameCard
           title="COMING"
           description="SOON"
-          colors={{ bg: "#FF69B4", text: "#FFFF00", accent: "#00FFFF" }}
           onClick={() => {}}
+          colorIndex={2}
         />
         <GameCard
           title="COMING"
           description="SOON"
-          colors={{ bg: "#00FF7F", text: "#FF1493", accent: "#FF69B4" }}
           onClick={() => {}}
+          colorIndex={3}
         />
       </div>
 
-      {/* パックマン風デコレーション - 回転ドット */}
+      {/* ゲーム開始メッセージ */}
       <div
         style={{
-          position: "absolute",
-          top: "50%",
-          left: "10px",
-          width: "12px",
-          height: "12px",
-          backgroundColor: "#FFFF00",
-          borderRadius: "50%",
-          animation: "float 3s ease-in-out infinite",
-          zIndex: 2,
+          position: "relative",
+          zIndex: 10,
+          fontSize: "14px",
+          color: "#00FFFF",
+          textShadow: "0 0 5px #00FFFF, 0 0 10px #00FF00",
+          fontFamily: "'Courier New', monospace",
+          letterSpacing: "1px",
+          animation: "blink 1s infinite",
         }}
-      />
-      <div
-        style={{
-          position: "absolute",
-          top: "50%",
-          right: "10px",
-          width: "12px",
-          height: "12px",
-          backgroundColor: "#FF1493",
-          borderRadius: "50%",
-          animation: "float 3.5s ease-in-out infinite",
-          zIndex: 2,
-        }}
-      />
+      >
+        PRESS START TO CONTINUE
+      </div>
 
       <style>{`
-        @keyframes float {
+        @keyframes scanlines {
+          0% {
+            transform: translateY(0);
+          }
+          100% {
+            transform: translateY(10px);
+          }
+        }
+
+        @keyframes invaderMove {
           0%, 100% {
-            transform: translateY(0px);
+            transform: translateX(0);
           }
           50% {
-            transform: translateY(-20px);
+            transform: translateX(15px);
+          }
+        }
+
+        @keyframes flicker {
+          0%, 100% {
+            opacity: 1;
+            textShadow: 0 0 10px #00FF00, 0 0 20px #00AA00;
+          }
+          50% {
+            opacity: 0.9;
+            textShadow: 0 0 5px #00FF00, 0 0 10px #007700;
+          }
+        }
+
+        @keyframes blink {
+          0%, 49%, 100% {
+            opacity: 1;
+          }
+          50%, 99% {
+            opacity: 0.3;
           }
         }
       `}</style>
