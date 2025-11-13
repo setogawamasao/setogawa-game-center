@@ -133,9 +133,7 @@ export default function Menu({ onStart, onHandLandmark }: MenuProps) {
         justifyContent: "center",
         padding: isSmall ? "15px 10px" : "30px 20px",
         boxSizing: "border-box",
-        background: `
-          linear-gradient(135deg, #F5E6F0 0%, #E8F4F8 50%, #F0F0E8 100%)
-        `,
+        background: "#000000",
         position: "relative",
         fontFamily: "'Comic Sans MS', 'Arial', sans-serif",
         overflow: "hidden",
@@ -155,59 +153,55 @@ export default function Menu({ onStart, onHandLandmark }: MenuProps) {
         }}
       />
 
-      {/* デコレーション絵文字 */}
+      {/* パックマン風デコレーション - ドット */}
       <div
         style={{
           position: "absolute",
           top: "15px",
           left: "20px",
-          fontSize: "50px",
-          opacity: 0.3,
-          transform: "rotate(-25deg)",
+          width: "20px",
+          height: "20px",
+          backgroundColor: "#FFFF00",
+          borderRadius: "50%",
           zIndex: 2,
         }}
-      >
-        ⭐
-      </div>
+      />
       <div
         style={{
           position: "absolute",
           top: "40px",
           right: "30px",
-          fontSize: "45px",
-          opacity: 0.3,
-          transform: "rotate(30deg)",
+          width: "15px",
+          height: "15px",
+          backgroundColor: "#FF1493",
+          borderRadius: "50%",
           zIndex: 2,
         }}
-      >
-        💫
-      </div>
+      />
       <div
         style={{
           position: "absolute",
           bottom: "40px",
           left: "30px",
-          fontSize: "40px",
-          opacity: 0.25,
-          transform: "rotate(-15deg)",
+          width: "18px",
+          height: "18px",
+          backgroundColor: "#00FFFF",
+          borderRadius: "50%",
           zIndex: 2,
         }}
-      >
-        🌈
-      </div>
+      />
       <div
         style={{
           position: "absolute",
           bottom: "30px",
           right: "40px",
-          fontSize: "45px",
-          opacity: 0.3,
-          transform: "rotate(20deg)",
+          width: "16px",
+          height: "16px",
+          backgroundColor: "#FF69B4",
+          borderRadius: "50%",
           zIndex: 2,
         }}
-      >
-        ✨
-      </div>
+      />
 
       {/* メインタイトルコンテナ */}
       <div
@@ -216,25 +210,15 @@ export default function Menu({ onStart, onHandLandmark }: MenuProps) {
           zIndex: 10,
           marginBottom: "30px",
           textAlign: "center",
-          background: `
-            linear-gradient(
-              135deg,
-              #FFFF00 0%,
-              #FF1493 25%,
-              #00FFFF 50%,
-              #FF69B4 75%,
-              #FFFF00 100%
-            )
-          `,
+          background: "#FFFF00",
           padding: isSmall ? "15px 25px" : "20px 40px",
-          borderRadius: "30px",
+          borderRadius: "0px",
           border: "4px solid #000000",
           boxShadow: `
             0 6px 0px #000000,
-            0 8px 15px rgba(0, 0, 0, 0.3),
-            inset 0 2px 5px rgba(255, 255, 255, 0.5)
+            0 8px 15px rgba(0, 0, 0, 0.3)
           `,
-          transform: "rotate(-2deg)",
+          transform: "skewX(-5deg)",
         }}
       >
         <div
@@ -245,12 +229,8 @@ export default function Menu({ onStart, onHandLandmark }: MenuProps) {
             margin: 0,
             textTransform: "uppercase",
             letterSpacing: "2px",
-            textShadow: `
-              2px 2px 0px #FFFF00,
-              4px 4px 0px #FF1493,
-              6px 6px 0px #00FFFF
-            `,
-            transform: "rotate(3deg)",
+            textShadow: "3px 3px 0px rgba(0, 0, 0, 0.5)",
+            transform: "skewX(-5deg)",
           }}
         >
           ゲーム
@@ -259,15 +239,12 @@ export default function Menu({ onStart, onHandLandmark }: MenuProps) {
           style={{
             fontSize: isSmall ? "32px" : "40px",
             fontWeight: "900",
-            color: "#FF1493",
+            color: "#000000",
             margin: "-5px 0 0 0",
             textTransform: "uppercase",
             letterSpacing: "1px",
-            textShadow: `
-              2px 2px 0px #00FFFF,
-              3px 3px 0px #FFFF00
-            `,
-            transform: "rotate(-2deg)",
+            textShadow: "3px 3px 0px rgba(0, 0, 0, 0.5)",
+            transform: "skewX(-5deg)",
           }}
         >
           センター
@@ -276,15 +253,12 @@ export default function Menu({ onStart, onHandLandmark }: MenuProps) {
           style={{
             fontSize: isSmall ? "24px" : "32px",
             fontWeight: "900",
-            color: "#00FFFF",
+            color: "#000000",
             margin: "0px 0 0 0",
             textTransform: "uppercase",
             letterSpacing: "1px",
-            textShadow: `
-              1px 1px 0px #FF1493,
-              2px 2px 0px #FFFF00
-            `,
-            transform: "rotate(1deg)",
+            textShadow: "3px 3px 0px rgba(0, 0, 0, 0.5)",
+            transform: "skewX(-5deg)",
           }}
         >
           瀬戸川
@@ -298,19 +272,15 @@ export default function Menu({ onStart, onHandLandmark }: MenuProps) {
           zIndex: 10,
           fontSize: isSmall ? "14px" : "18px",
           fontWeight: "900",
-          color: "#000000",
+          color: "#FFFF00",
           marginBottom: "30px",
           textTransform: "uppercase",
           letterSpacing: "1px",
-          textShadow: `
-            1px 1px 0px #FFFF00,
-            2px 2px 0px #FF1493,
-            3px 3px 0px #00FFFF
-          `,
-          transform: "rotate(2deg)",
+          textShadow: "2px 2px 0px #000000",
+          transform: "skewX(-5deg)",
         }}
       >
-        ✨ KIDCORE GAMEPARK ✨
+        ✨ PACMAN GAMEPARK ✨
       </div>
 
       {/* ゲームグリッド */}
@@ -352,41 +322,41 @@ export default function Menu({ onStart, onHandLandmark }: MenuProps) {
         />
       </div>
 
-      {/* デコレーション星 */}
+      {/* パックマン風デコレーション - 回転ドット */}
       <div
         style={{
           position: "absolute",
           top: "50%",
           left: "10px",
-          fontSize: "30px",
-          opacity: 0.2,
-          animation: "spin 10s linear infinite",
+          width: "12px",
+          height: "12px",
+          backgroundColor: "#FFFF00",
+          borderRadius: "50%",
+          animation: "float 3s ease-in-out infinite",
           zIndex: 2,
         }}
-      >
-        ⭐
-      </div>
+      />
       <div
         style={{
           position: "absolute",
           top: "50%",
           right: "10px",
-          fontSize: "30px",
-          opacity: 0.2,
-          animation: "spin 8s linear infinite reverse",
+          width: "12px",
+          height: "12px",
+          backgroundColor: "#FF1493",
+          borderRadius: "50%",
+          animation: "float 3.5s ease-in-out infinite",
           zIndex: 2,
         }}
-      >
-        💫
-      </div>
+      />
 
       <style>{`
-        @keyframes spin {
-          from {
-            transform: rotate(0deg);
+        @keyframes float {
+          0%, 100% {
+            transform: translateY(0px);
           }
-          to {
-            transform: rotate(360deg);
+          50% {
+            transform: translateY(-20px);
           }
         }
       `}</style>

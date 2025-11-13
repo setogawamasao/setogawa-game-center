@@ -5,7 +5,11 @@ import {
   DrawingUtils,
 } from "@mediapipe/tasks-vision";
 
-export default function HandLandmarkGame() {
+interface HandLandmarkGameProps {
+  onReturn?: () => void;
+}
+
+export default function HandLandmarkGame({ onReturn }: HandLandmarkGameProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -319,10 +323,49 @@ export default function HandLandmarkGame() {
         alignItems: "center",
         margin: "0 auto",
         background: "#222",
+        position: "relative",
       }}
     >
       <video ref={videoRef} style={{ display: "none" }} />
       <canvas ref={canvasRef} style={{ display: "block" }} />
+
+      {/* パックマン風の戻るボタン */}
+      {onReturn && (
+        <button
+          onClick={onReturn}
+          style={{
+            position: "absolute",
+            top: "20px",
+            left: "20px",
+            width: "60px",
+            height: "60px",
+            backgroundColor: "#FFFF00",
+            border: "3px solid #000000",
+            borderRadius: "0px",
+            cursor: "pointer",
+            fontSize: "24px",
+            fontWeight: "900",
+            color: "#000000",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            transition: "all 0.1s",
+            boxShadow: "0 4px 0px #000000",
+            transform: "skewX(-5deg)",
+            zIndex: 100,
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = "skewX(-5deg) translateY(-3px)";
+            e.currentTarget.style.boxShadow = "0 6px 0px #000000";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = "skewX(-5deg)";
+            e.currentTarget.style.boxShadow = "0 4px 0px #000000";
+          }}
+        >
+          ←
+        </button>
+      )}
     </div>
   );
 }

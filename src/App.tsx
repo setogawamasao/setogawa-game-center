@@ -36,7 +36,7 @@ export default function App() {
           restartRef={restartRef}
         />
       ) : (
-        <HandLandmarkGame />
+        <HandLandmarkGame onReturn={() => setGame("menu")} />
       )}
     </div>
   );
