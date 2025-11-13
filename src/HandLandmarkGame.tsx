@@ -79,7 +79,10 @@ export default function HandLandmarkGame() {
               ...lm,
               x: 1 - lm.x,
             }));
-            drawer.drawLandmarks(flipped, { color: "deepskyblue", lineWidth: 3 });
+            drawer.drawLandmarks(flipped, {
+              color: "deepskyblue",
+              lineWidth: 3,
+            });
             drawer.drawConnectors(flipped, HandLandmarker.HAND_CONNECTIONS, {
               color: "orange",
               lineWidth: 2,
