@@ -167,13 +167,13 @@ export default function NewHandGame({ onReturn }: NewHandGameProps) {
         const detect = () => {
           if (!videoRef.current || !landmarker || !faceLandmarker) return;
           const ts = performance.now();
-          
+
           // 経過時間を計算（秒単位）GameOver時は停止
           if (!gameOverRef.current) {
             const elapsed = Math.floor((ts - gameStartTimeRef.current) / 1000);
             setElapsedTime(elapsed);
           }
-          
+
           const res = landmarker.detectForVideo(videoRef.current, ts);
           const faceRes = faceLandmarker.detectForVideo(videoRef.current, ts);
 
