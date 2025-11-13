@@ -78,7 +78,7 @@ export default function App() {
       let frameCount = 0;
       let totalScore = 0;
       let startTime = Date.now();
-      const gameDuration = 30000; // 30秒
+      const gameDuration = 10000; // 10秒
       let gameEnded = false;
       let finalScore = 0;
       let buttonRect = { x: 0, y: 0, width: 0, height: 0 };
