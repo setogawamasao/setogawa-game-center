@@ -1,8 +1,9 @@
 interface MenuProps {
   onStart: () => void;
+  onHandLandmark: () => void;
 }
 
-export default function Menu({ onStart }: MenuProps) {
+export default function Menu({ onStart, onHandLandmark }: MenuProps) {
   const isSmall = typeof window !== "undefined" && window.innerWidth < 600;
   const gameSize = isSmall ? 120 : 160;
   const gap = isSmall ? 12 : 20;
@@ -332,15 +333,15 @@ export default function Menu({ onStart }: MenuProps) {
           onClick={onStart}
         />
         <GameCard
-          title="COMING"
-          description="SOON"
-          colors={{ bg: "#FF69B4", text: "#FFFF00", accent: "#00FFFF" }}
-          onClick={() => {}}
+          title="HAND"
+          description="LANDMARK"
+          colors={{ bg: "#00FFFF", text: "#FF1493", accent: "#FFFF00" }}
+          onClick={onHandLandmark}
         />
         <GameCard
           title="COMING"
           description="SOON"
-          colors={{ bg: "#00FFFF", text: "#FF1493", accent: "#FFFF00" }}
+          colors={{ bg: "#FF69B4", text: "#FFFF00", accent: "#00FFFF" }}
           onClick={() => {}}
         />
         <GameCard
