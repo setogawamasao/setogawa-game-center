@@ -315,16 +315,9 @@ export default function Menu({ onStart, onHandLandmark }: MenuProps) {
         <GameCard
           title="COMING SOON"
           description=""
-          explanation="新しいゲームが来週登場!"
-          onClick={() => {}}
-          colorIndex={2}
-        />
-        <GameCard
-          title="COMING SOON"
-          description=""
           explanation="お楽しみに!"
           onClick={() => {}}
-          colorIndex={3}
+          colorIndex={2}
         />
       </div>
 
