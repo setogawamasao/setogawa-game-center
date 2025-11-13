@@ -3,8 +3,12 @@ interface MenuProps {
 }
 
 export default function Menu({ onStart }: MenuProps) {
-  const gameSize = 160;
-  const gap = 20;
+  const isSmall = typeof window !== "undefined" && window.innerWidth < 600;
+  const gameSize = isSmall ? 120 : 160;
+  const gap = isSmall ? 12 : 20;
+  const titleSize = isSmall ? 36 : 48;
+  const subtitleSize = isSmall ? 32 : 40;
+  const subsubTitleSize = isSmall ? 24 : 32;
 
   const GameCard = ({
     title,
@@ -89,7 +93,7 @@ export default function Menu({ onStart }: MenuProps) {
 
       <div
         style={{
-          fontSize: "24px",
+          fontSize: isSmall ? "20px" : "24px",
           fontWeight: "900",
           color: colors.text,
           textTransform: "uppercase",
@@ -103,7 +107,7 @@ export default function Menu({ onStart }: MenuProps) {
       </div>
       <div
         style={{
-          fontSize: "10px",
+          fontSize: isSmall ? "8px" : "10px",
           color: colors.text,
           fontWeight: "bold",
           textTransform: "uppercase",
@@ -126,7 +130,7 @@ export default function Menu({ onStart }: MenuProps) {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        padding: "30px 20px",
+        padding: isSmall ? "15px 10px" : "30px 20px",
         boxSizing: "border-box",
         background: `
           linear-gradient(135deg, #F5E6F0 0%, #E8F4F8 50%, #F0F0E8 100%)
@@ -221,7 +225,7 @@ export default function Menu({ onStart }: MenuProps) {
               #FFFF00 100%
             )
           `,
-          padding: "20px 40px",
+          padding: isSmall ? "15px 25px" : "20px 40px",
           borderRadius: "30px",
           border: "4px solid #000000",
           boxShadow: `
@@ -234,7 +238,7 @@ export default function Menu({ onStart }: MenuProps) {
       >
         <div
           style={{
-            fontSize: "48px",
+            fontSize: isSmall ? "36px" : "48px",
             fontWeight: "900",
             color: "#000000",
             margin: 0,
@@ -252,7 +256,7 @@ export default function Menu({ onStart }: MenuProps) {
         </div>
         <div
           style={{
-            fontSize: "40px",
+            fontSize: isSmall ? "32px" : "40px",
             fontWeight: "900",
             color: "#FF1493",
             margin: "-5px 0 0 0",
@@ -269,7 +273,7 @@ export default function Menu({ onStart }: MenuProps) {
         </div>
         <div
           style={{
-            fontSize: "32px",
+            fontSize: isSmall ? "24px" : "32px",
             fontWeight: "900",
             color: "#00FFFF",
             margin: "0px 0 0 0",
@@ -291,7 +295,7 @@ export default function Menu({ onStart }: MenuProps) {
         style={{
           position: "relative",
           zIndex: 10,
-          fontSize: "18px",
+          fontSize: isSmall ? "14px" : "18px",
           fontWeight: "900",
           color: "#000000",
           marginBottom: "30px",
@@ -316,7 +320,8 @@ export default function Menu({ onStart }: MenuProps) {
           display: "grid",
           gridTemplateColumns: `repeat(auto-fit, minmax(${gameSize}px, 1fr))`,
           gap: `${gap}px`,
-          maxWidth: "560px",
+          maxWidth: isSmall ? "100%" : "560px",
+          padding: isSmall ? "0 10px" : "0",
           filter: "drop-shadow(3px 3px 0px rgba(0, 0, 0, 0.3))",
         }}
       >
