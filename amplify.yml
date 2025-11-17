@@ -1,8 +1,4 @@
 version: 1
-env:
-  variables:
-    NODE_ENV: production
-    NODE_OPTIONS: --max-old-space-size=4096
 frontend:
   phases:
     preBuild:
@@ -17,6 +13,3 @@ frontend:
     baseDirectory: dist
     files:
       - "**/*"
-  cache:
-    paths:
-      - node_modules/**/*
