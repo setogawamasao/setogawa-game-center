@@ -7,14 +7,10 @@ frontend:
   phases:
     preBuild:
       commands:
-        - echo "Node version:" && node --version
-        - echo "NPM version:" && npm --version
         - echo "Installing dependencies..."
-        - npm ci
+        - npm install
     build:
       commands:
-        - echo "Linting..."
-        - npm run lint || true
         - echo "Building application..."
         - npm run build
   artifacts:
