@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import {
   FilesetResolver,
-  PoseLandmarker,
+  HandLandmarker,
   DrawingUtils,
 } from "@mediapipe/tasks-vision";
 
@@ -30,7 +30,7 @@ export default function BallCatch({
   restartRef,
 }: BallCatchProps) {
   useEffect(() => {
-    let landmarker: PoseLandmarker | undefined;
+    let landmarker: HandLandmarker | undefined;
     let stream: MediaStream | undefined;
 
     const init = async () => {
@@ -38,14 +38,14 @@ export default function BallCatch({
         "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/wasm"
       );
 
-      landmarker = await PoseLandmarker.createFromOptions(vision, {
+      landmarker = await HandLandmarker.createFromOptions(vision, {
         baseOptions: {
           modelAssetPath:
-            "https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/latest/pose_landmarker_lite.task",
+            "https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/latest/hand_landmarker.task",
           delegate: "GPU",
         },
         runningMode: "VIDEO",
-        numPoses: 1,
+        numHands: 2,
       });
 
       stream = await navigator.mediaDevices.getUserMedia({ video: true });
@@ -236,10 +236,12 @@ export default function BallCatch({
           ball.y += ball.vy;
 
           if (res.landmarks.length > 0) {
-            if (checkCollision(ball, res.landmarks[0])) {
-              totalScore += ball.points;
-              ball.vanishPhase = 1;
-              continue;
+            for (const hand of res.landmarks) {
+              if (checkCollision(ball, hand)) {
+                totalScore += ball.points;
+                ball.vanishPhase = 1;
+                break;
+              }
             }
           }
 
@@ -261,66 +263,22 @@ export default function BallCatch({
         }
 
         if (res.landmarks.length) {
-          const lm = res.landmarks[0];
+          for (let handIdx = 0; handIdx < res.landmarks.length; handIdx++) {
+            const hand = res.landmarks[handIdx];
 
-          const flippedLm = lm.map((landmark: any) => ({
-            ...landmark,
-            x: 1 - landmark.x,
-          }));
+            const flippedLm = hand.map((landmark: any) => ({
+              ...landmark,
+              x: 1 - landmark.x,
+            }));
 
-          const noseLandmark = flippedLm[4];
-          if (noseLandmark) {
-            const noseX = noseLandmark.x * displayWidth;
-            const noseY = noseLandmark.y * displayHeight;
-
-            const faceRadius = 120;
-
-            ctx2d.fillStyle = "#000000";
-            ctx2d.beginPath();
-            ctx2d.arc(noseX, noseY, faceRadius, 0, Math.PI * 2);
-            ctx2d.fill();
-
-            ctx2d.fillStyle = "#FFFFFF";
-
-            const eyeRadius = 15;
-            const eyeDistance = 50;
-            ctx2d.beginPath();
-            ctx2d.arc(
-              noseX - eyeDistance,
-              noseY - 20,
-              eyeRadius,
-              0,
-              Math.PI * 2
-            );
-            ctx2d.fill();
-            ctx2d.beginPath();
-            ctx2d.arc(
-              noseX + eyeDistance,
-              noseY - 20,
-              eyeRadius,
-              0,
-              Math.PI * 2
-            );
-            ctx2d.fill();
-
-            ctx2d.beginPath();
-            ctx2d.ellipse(noseX, noseY + 40, 40, 15, 0, 0, Math.PI * 2);
-            ctx2d.fill();
-          }
-
-          const bodyLandmarks = flippedLm.slice(11);
-          if (bodyLandmarks.length > 0) {
-            drawer.drawLandmarks(bodyLandmarks, {
-              color: "red",
+            drawer.drawLandmarks(flippedLm, {
+              color: handIdx === 0 ? "#00FF00" : "#FF00FF",
               lineWidth: 2,
             });
-          }
 
-          const bodyConnections = PoseLandmarker.POSE_CONNECTIONS.filter(
-            (connection: any) => connection.start >= 11 && connection.end >= 11
-          );
-          if (bodyConnections.length > 0) {
-            drawer.drawConnectors(flippedLm, bodyConnections);
+            if (res.handedness && res.handedness[handIdx]) {
+              drawer.drawConnectors(flippedLm, HandLandmarker.HAND_CONNECTIONS);
+            }
           }
         }
 
