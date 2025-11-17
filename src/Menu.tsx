@@ -297,13 +297,11 @@ export default function Menu({ onStart, onHandLandmark, onNew }: MenuProps) {
           position: "relative",
           zIndex: 10,
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+          gridTemplateColumns: "repeat(2, 180px)",
           gap: "20px",
           padding: "0 20px",
-          marginBottom: "30px",
-          maxWidth: "800px",
-          width: "100%",
-          margin: "0 auto 30px",
+          justifyContent: "center",
+          margin: "0 auto 30px auto",
         }}
       >
         <GameCard
