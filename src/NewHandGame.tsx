@@ -14,8 +14,6 @@ export default function NewHandGame({ onReturn }: NewHandGameProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const [score, setScore] = useState(0);
-  const [gameActive, setGameActive] = useState(false);
   const [gameOver, setGameOver] = useState(false);
   const [elapsedTime, setElapsedTime] = useState(0);
   const engineRef = useRef<Matter.Engine | null>(null);
@@ -350,7 +348,7 @@ export default function NewHandGame({ onReturn }: NewHandGameProps) {
       if (animationFrameId) cancelAnimationFrame(animationFrameId);
       if (stream) stream.getTracks().forEach((track) => track.stop());
     };
-  }, [gameActive, gameOver]);
+  }, [gameOver]);
 
   return (
     <div
