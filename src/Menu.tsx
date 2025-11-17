@@ -303,7 +303,7 @@ export default function Menu({ onStart, onHandLandmark, onNew }: MenuProps) {
           explanation="落ちてくるボールをキャッチするゲーム"
           onClick={onStart}
           colorIndex={0}
-          videoPath="/movies/BallCatch.tsx.compressed.mov"
+          videoPath="/movies/BallCatch.webm"
         />
         <GameCard
           title="HAND LANDMARK"
@@ -311,7 +311,7 @@ export default function Menu({ onStart, onHandLandmark, onNew }: MenuProps) {
           explanation="手の動きを認識してゲームをプレイ"
           onClick={onHandLandmark}
           colorIndex={1}
-          videoPath="/movies/HandLandmarkGame.compressed.mov"
+          videoPath="/movies/HandLandmarkGame.webm"
         />
         <GameCard
           title="NEW HAND"
