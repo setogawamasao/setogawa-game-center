@@ -198,13 +198,13 @@ export default function Menu({ onStart, onHandLandmark, onNew }: MenuProps) {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        justifyContent: "center",
+        justifyContent: "flex-start",
         padding: "30px 20px",
         boxSizing: "border-box",
         background: "#000000",
         position: "relative",
         fontFamily: "'Courier New', monospace",
-        overflow: "hidden",
+        overflow: "auto",
       }}
     >
       {/* スキャンライン効果 */}
@@ -301,7 +301,9 @@ export default function Menu({ onStart, onHandLandmark, onNew }: MenuProps) {
           gap: "20px",
           padding: "0 20px",
           marginBottom: "30px",
-          maxWidth: "100%",
+          maxWidth: "800px",
+          width: "100%",
+          margin: "0 auto 30px",
         }}
       >
         <GameCard
