@@ -73,6 +73,14 @@ export default function BallCatch({
       canvas.height = displayHeight;
       const ctx2d = canvas.getContext("2d")!;
 
+      // キャンバスをビューポート全体に表示
+      const canvasElement = canvasRef.current!;
+      canvasElement.style.width = "100%";
+      canvasElement.style.height = "100%";
+      canvasElement.style.maxWidth = "100vw";
+      canvasElement.style.maxHeight = "100vh";
+      canvasElement.style.objectFit = "contain";
+
       const balls: Ball[] = [];
       let frameCount = 0;
       let totalScore = 0;
@@ -407,13 +415,13 @@ export default function BallCatch({
           position: "absolute",
           top: "20px",
           left: "20px",
-          width: "60px",
-          height: "60px",
+          width: "clamp(50px, 10vw, 60px)",
+          height: "clamp(50px, 10vw, 60px)",
           backgroundColor: "#FFFF00",
           border: "3px solid #000000",
           borderRadius: "0px",
           cursor: "pointer",
-          fontSize: "24px",
+          fontSize: "clamp(18px, 5vw, 24px)",
           fontWeight: "900",
           color: "#000000",
           display: "flex",
