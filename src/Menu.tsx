@@ -38,6 +38,7 @@ export default function Menu({ onStart, onHandLandmark, onNew }: MenuProps) {
           gap: "8px",
           cursor: "pointer",
         }}
+        onClick={onClick}
         onMouseEnter={(e) => {
           const cardDiv = e.currentTarget.querySelector(
             "[data-card]"
@@ -94,6 +95,7 @@ export default function Menu({ onStart, onHandLandmark, onNew }: MenuProps) {
                 ? "255, 0, 128"
                 : "0, 255, 136"
             }, 0.5)`,
+            cursor: "pointer",
           }}
         >
           {/* 背景 */}
@@ -131,12 +133,8 @@ export default function Menu({ onStart, onHandLandmark, onNew }: MenuProps) {
         </div>
 
         {/* テキストセクション */}
-        <button
-          onClick={onClick}
+        <div
           style={{
-            background: "transparent",
-            border: "none",
-            cursor: "pointer",
             display: "flex",
             flexDirection: "column",
             alignItems: "flex-start",
@@ -147,6 +145,7 @@ export default function Menu({ onStart, onHandLandmark, onNew }: MenuProps) {
             color: col.color,
             textShadow: `0 0 10px ${col.glow}`,
             textAlign: "left",
+            cursor: "pointer",
           }}
         >
           <div
@@ -184,7 +183,7 @@ export default function Menu({ onStart, onHandLandmark, onNew }: MenuProps) {
               {explanation}
             </div>
           )}
-        </button>
+        </div>
       </div>
     );
   };
@@ -267,18 +266,23 @@ export default function Menu({ onStart, onHandLandmark, onNew }: MenuProps) {
           zIndex: 10,
           marginBottom: "50px",
           textAlign: "center",
+          padding: "0 20px",
+          maxWidth: "100%",
         }}
       >
         <div
           style={{
-            fontSize: "36px",
+            fontSize: "clamp(16px, 6vw, 36px)",
             fontWeight: "bold",
-            letterSpacing: "3px",
+            letterSpacing: "clamp(0.5px, 0.3vw, 3px)",
             marginBottom: "8px",
             fontFamily: "'Courier New', monospace",
             animation: "flicker 0.15s infinite",
             color: "#00FF00",
             textShadow: "0 0 10px #00FF00, 0 0 20px #00FFFF, 0 0 30px #FF0080",
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
           }}
         >
           瀬戸川ゲームセンター
