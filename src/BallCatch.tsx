@@ -410,7 +410,10 @@ export default function BallCatch({
 
       {/* パックマン風の戻るボタン */}
       <button
-        onClick={onRestart}
+        onClick={() => {
+          onRestart();
+          restartRef.current();
+        }}
         style={{
           position: "absolute",
           top: "20px",
