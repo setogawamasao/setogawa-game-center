@@ -32,7 +32,8 @@ export default function Menu({ onStart, onHandLandmark, onNew }: MenuProps) {
       <div
         style={{
           position: "relative",
-          width: "180px",
+          width: "100%",
+          maxWidth: "180px",
           display: "flex",
           flexDirection: "column",
           gap: "8px",
@@ -81,8 +82,9 @@ export default function Menu({ onStart, onHandLandmark, onNew }: MenuProps) {
           data-card
           style={{
             position: "relative",
-            width: "180px",
-            height: "130px",
+            width: "100%",
+            paddingBottom: "100%",
+            height: 0,
             overflow: "hidden",
             borderRadius: "4px",
             border: `3px solid ${col.color}`,
@@ -295,10 +297,11 @@ export default function Menu({ onStart, onHandLandmark, onNew }: MenuProps) {
           position: "relative",
           zIndex: 10,
           display: "grid",
-          gridTemplateColumns: "repeat(2, 1fr)",
+          gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
           gap: "20px",
           padding: "0 20px",
           marginBottom: "30px",
+          maxWidth: "100%",
         }}
       >
         <GameCard
@@ -385,6 +388,12 @@ export default function Menu({ onStart, onHandLandmark, onNew }: MenuProps) {
           }
           50%, 99% {
             opacity: 0.3;
+          }
+        }
+
+        @media (max-width: 640px) {
+          [style*="gridTemplateColumns"] {
+            grid-template-columns: 1fr !important;
           }
         }
       `}</style>
