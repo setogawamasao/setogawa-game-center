@@ -303,6 +303,7 @@ export default function Menu({ onStart, onHandLandmark, onNew }: MenuProps) {
           justifyContent: "center",
           margin: "0 auto 30px auto",
         }}
+        className="game-grid"
       >
         <GameCard
           title="BALL CATCH"
@@ -392,7 +393,7 @@ export default function Menu({ onStart, onHandLandmark, onNew }: MenuProps) {
         }
 
         @media (max-width: 640px) {
-          [style*="gridTemplateColumns"] {
+          .game-grid {
             grid-template-columns: 1fr !important;
           }
         }
