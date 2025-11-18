@@ -1,5 +1,10 @@
 import { useRef } from "react";
-import { BrowserRouter as Router, Routes, Route, useNavigate } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useNavigate,
+} from "react-router-dom";
 import Menu from "./Menu";
 import BallCatch from "./BallCatch";
 import HandFilter from "./HandFilter";
