@@ -44,7 +44,7 @@ export default function NoseProtectionGame({
           baseOptions: {
             modelAssetPath:
               "https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/latest/hand_landmarker.task",
-            delegate: "GPU",
+            delegate: "CPU",
           },
           runningMode: "VIDEO",
           numHands: 2,
@@ -55,15 +55,23 @@ export default function NoseProtectionGame({
           baseOptions: {
             modelAssetPath:
               "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/latest/face_landmarker.task",
-            delegate: "GPU",
+            delegate: "CPU",
           },
           runningMode: "VIDEO",
           numFaces: 1,
         });
 
-        stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: {
+            facingMode: "user",
+            width: { ideal: 1280 },
+            height: { ideal: 720 },
+          },
+          audio: false,
+        });
         if (!videoRef.current) return;
         videoRef.current.srcObject = stream;
+        videoRef.current.setAttribute("playsinline", "true");
         await videoRef.current.play();
 
         const canvas = canvasRef.current!;
@@ -348,7 +356,20 @@ export default function NoseProtectionGame({
 
     return () => {
       if (animationFrameId) cancelAnimationFrame(animationFrameId);
-      if (stream) stream.getTracks().forEach((track) => track.stop());
+      if (stream) {
+        stream.getTracks().forEach((track) => {
+          track.stop();
+        });
+      }
+      if (landmarker) {
+        landmarker.close();
+      }
+      if (faceLandmarker) {
+        faceLandmarker.close();
+      }
+      if (engineRef.current) {
+        Matter.Engine.clear(engineRef.current);
+      }
     };
   }, [gameOver]);
 
