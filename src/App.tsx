@@ -1,47 +1,69 @@
-import { useRef, useState } from "react";
+import { useRef } from "react";
+import { BrowserRouter as Router, Routes, Route, useNavigate } from "react-router-dom";
 import Menu from "./Menu";
 import BallCatch from "./BallCatch";
 import HandFilter from "./HandFilter";
 import NoseProtectionGame from "./NoseProtectionGame";
 
-export default function App() {
+function AppContent() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const restartRef = useRef<() => void>(() => {});
-  const [game, setGame] = useState<"menu" | "ball" | "hand" | "new">("menu");
+  const navigate = useNavigate();
+
+  const containerStyle = {
+    margin: 0,
+    padding: 0,
+    overflow: "hidden" as const,
+    width: "100vw",
+    height: "100vh",
+    display: "flex" as const,
+    justifyContent: "center" as const,
+    alignItems: "center" as const,
+    backgroundColor: "#000",
+  };
 
   return (
-    <div
-      style={{
-        margin: 0,
-        padding: 0,
-        overflow: "hidden",
-        width: "100vw",
-        height: "100vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: "#000",
-      }}
-    >
-      {game === "menu" ? (
-        <Menu
-          onStart={() => setGame("ball")}
-          onHandLandmark={() => setGame("hand")}
-          onNew={() => setGame("new")}
+    <div style={containerStyle}>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <Menu
+              onStart={() => navigate("/ball-catch")}
+              onHandLandmark={() => navigate("/hand-filter")}
+              onNew={() => navigate("/nose-protection")}
+            />
+          }
         />
-      ) : game === "ball" ? (
-        <BallCatch
-          canvasRef={canvasRef}
-          videoRef={videoRef}
-          onRestart={() => setGame("menu")}
-          restartRef={restartRef}
+        <Route
+          path="/ball-catch"
+          element={
+            <BallCatch
+              canvasRef={canvasRef}
+              videoRef={videoRef}
+              onRestart={() => navigate("/")}
+              restartRef={restartRef}
+            />
+          }
         />
-      ) : game === "hand" ? (
-        <HandFilter onReturn={() => setGame("menu")} />
-      ) : (
-        <NoseProtectionGame onReturn={() => setGame("menu")} />
-      )}
+        <Route
+          path="/hand-filter"
+          element={<HandFilter onReturn={() => navigate("/")} />}
+        />
+        <Route
+          path="/nose-protection"
+          element={<NoseProtectionGame onReturn={() => navigate("/")} />}
+        />
+      </Routes>
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <Router>
+      <AppContent />
+    </Router>
   );
 }
