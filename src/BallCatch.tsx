@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   FilesetResolver,
   HandLandmarker,
@@ -29,6 +29,7 @@ export default function BallCatch({
   onRestart,
   restartRef,
 }: BallCatchProps) {
+  const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     let landmarker: HandLandmarker | undefined;
     let stream: MediaStream | undefined;
@@ -52,6 +53,9 @@ export default function BallCatch({
       if (!videoRef.current) return;
       videoRef.current.srcObject = stream;
       await videoRef.current.play();
+
+      // ローディング完了
+      setIsLoading(false);
 
       const canvas = canvasRef.current!;
       const video = videoRef.current!;
@@ -446,6 +450,73 @@ export default function BallCatch({
       >
         ←
       </button>
+
+      {/* ローディング画面 */}
+      {isLoading && (
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0, 0, 0, 0.9)",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 1000,
+          }}
+        >
+          <div
+            style={{
+              fontSize: "32px",
+              fontWeight: "bold",
+              color: "#00FF00",
+              fontFamily: "'Courier New', monospace",
+              textShadow: "0 0 10px #00FF00",
+              marginBottom: "30px",
+            }}
+          >
+            LOADING...
+          </div>
+          <div
+            style={{
+              width: "200px",
+              height: "4px",
+              backgroundColor: "#333",
+              borderRadius: "2px",
+              overflow: "hidden",
+              border: "2px solid #00FF00",
+            }}
+          >
+            <div
+              style={{
+                height: "100%",
+                backgroundColor: "#00FF00",
+                width: "100%",
+                animation: "loading 1.5s ease-in-out infinite",
+              }}
+            />
+          </div>
+          <style>{`
+            @keyframes loading {
+              0%, 100% {
+                width: 0%;
+                marginLeft: 0;
+              }
+              50% {
+                width: 100%;
+                marginLeft: 0;
+              }
+              100% {
+                width: 0%;
+                marginLeft: 100%;
+              }
+            }
+          `}</style>
+        </div>
+      )}
     </div>
   );
 }
