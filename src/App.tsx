@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import Menu from "./Menu";
 import BallCatch from "./BallCatch";
 import HandFilter from "./HandFilter";
-import NewHandGame from "./NewHandGame";
+import NoseProtectionGame from "./NoseProtectionGame";
 
 export default function App() {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -40,7 +40,7 @@ export default function App() {
       ) : game === "hand" ? (
         <HandFilter onReturn={() => setGame("menu")} />
       ) : (
-        <NewHandGame onReturn={() => setGame("menu")} />
+        <NoseProtectionGame onReturn={() => setGame("menu")} />
       )}
     </div>
   );

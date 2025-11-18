@@ -326,11 +326,12 @@ export default function Menu({
           videoPath="/movies/HandFilter.webm"
         />
         <GameCard
-          title="NEW HAND"
+          title="NOSE PROTECTION"
           description=""
-          explanation="新しい手認識ゲーム"
+          explanation="ボールから手で鼻を守る！"
           onClick={onNew || (() => {})}
           colorIndex={2}
+          videoPath="/movies/NoseProtectionGame.webm"
         />
         <GameCard
           title="COMING SOON"

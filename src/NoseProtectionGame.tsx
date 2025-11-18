@@ -6,11 +6,13 @@ import {
 } from "@mediapipe/tasks-vision";
 import * as Matter from "matter-js";
 
-interface NewHandGameProps {
+interface NoseProtectionGameProps {
   onReturn?: () => void;
 }
 
-export default function NewHandGame({ onReturn }: NewHandGameProps) {
+export default function NoseProtectionGame({
+  onReturn,
+}: NoseProtectionGameProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
