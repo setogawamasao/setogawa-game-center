@@ -5,11 +5,11 @@ import {
   DrawingUtils,
 } from "@mediapipe/tasks-vision";
 
-interface HandLandmarkGameProps {
+interface HandFilterProps {
   onReturn?: () => void;
 }
 
-export default function HandLandmarkGame({ onReturn }: HandLandmarkGameProps) {
+export default function HandFilter({ onReturn }: HandFilterProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);

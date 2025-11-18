@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import Menu from "./Menu";
 import BallCatch from "./BallCatch";
-import HandLandmarkGame from "./HandLandmarkGame";
+import HandFilter from "./HandFilter";
 import NewHandGame from "./NewHandGame";
 
 export default function App() {
@@ -38,7 +38,7 @@ export default function App() {
           restartRef={restartRef}
         />
       ) : game === "hand" ? (
-        <HandLandmarkGame onReturn={() => setGame("menu")} />
+        <HandFilter onReturn={() => setGame("menu")} />
       ) : (
         <NewHandGame onReturn={() => setGame("menu")} />
       )}

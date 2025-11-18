@@ -314,12 +314,12 @@ export default function Menu({ onStart, onHandLandmark, onNew }: MenuProps) {
           videoPath="/movies/BallCatch.webm"
         />
         <GameCard
-          title="HAND LANDMARK"
+          title="HAND FILTER"
           description=""
           explanation="手の動きを認識してゲームをプレイ"
           onClick={onHandLandmark}
           colorIndex={1}
-          videoPath="/movies/HandLandmarkGame.webm"
+          videoPath="/movies/HandFilter.webm"
         />
         <GameCard
           title="NEW HAND"
