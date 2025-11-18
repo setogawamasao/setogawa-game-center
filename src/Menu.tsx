@@ -4,7 +4,11 @@ interface MenuProps {
   onNew?: () => void;
 }
 
-export default function Menu({ onStart, onHandLandmark, onNew }: MenuProps) {
+export default function Menu({
+  onStart,
+  onHandLandmark: onHandFilter,
+  onNew,
+}: MenuProps) {
   const colors = [
     { bg: "#001100", color: "#00FF00", glow: "#00FF00" }, // グリーン
     { bg: "#000011", color: "#00FFFF", glow: "#00FFFF" }, // シアン
@@ -316,8 +320,8 @@ export default function Menu({ onStart, onHandLandmark, onNew }: MenuProps) {
         <GameCard
           title="HAND FILTER"
           description=""
-          explanation="手の動きを認識してゲームをプレイ"
-          onClick={onHandLandmark}
+          explanation="手の動きを認識して映像にフィルターを適用"
+          onClick={onHandFilter}
           colorIndex={1}
           videoPath="/movies/HandFilter.webm"
         />
