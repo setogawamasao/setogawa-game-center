@@ -208,7 +208,7 @@ export default function Menu({
         background: "#000000",
         position: "relative",
         fontFamily: "'Courier New', monospace",
-        overflow: "auto",
+        overflow: "hidden",
       }}
     >
       {/* スキャンライン効果 */}
@@ -223,7 +223,6 @@ export default function Menu({
             "repeating-linear-gradient(0deg, rgba(0, 255, 0, 0.02) 0px, rgba(0, 255, 255, 0.02) 1px, transparent 2px, transparent 3px)",
           pointerEvents: "none",
           zIndex: 1,
-          animation: "scanlines 8s linear infinite",
         }}
       />
 
@@ -358,15 +357,6 @@ export default function Menu({
       </div>
 
       <style>{`
-        @keyframes scanlines {
-          0% {
-            transform: translateY(0);
-          }
-          100% {
-            transform: translateY(10px);
-          }
-        }
-
         @keyframes invaderMove {
           0%, 100% {
             transform: translateX(0);
