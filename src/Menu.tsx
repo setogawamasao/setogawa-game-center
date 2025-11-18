@@ -283,7 +283,6 @@ export default function Menu({
             letterSpacing: "clamp(0.5px, 0.3vw, 3px)",
             marginBottom: "8px",
             fontFamily: "'Courier New', monospace",
-            animation: "flicker 0.15s infinite",
             color: "#00FF00",
             textShadow: "0 0 10px #00FF00, 0 0 20px #00FFFF, 0 0 30px #FF0080",
             whiteSpace: "nowrap",
@@ -393,7 +392,7 @@ export default function Menu({
             opacity: 1;
           }
           50%, 99% {
-            opacity: 0.3;
+            opacity: 0.5;
           }
         }
 
