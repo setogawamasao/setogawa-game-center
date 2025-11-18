@@ -383,18 +383,23 @@ export default function BallCatch({
         ref={canvasRef}
         style={{ display: "block", cursor: "pointer" }}
         onClick={(e) => {
-          if (!canvasRef.current) return;
+          if (!canvasRef.current || isLoading) return;
           const buttonData = canvasRef.current.dataset.restartButton;
           if (!buttonData) return;
 
           try {
             const button = JSON.parse(buttonData);
-            const rect = canvasRef.current.getBoundingClientRect();
+            const canvas = canvasRef.current;
+            const rect = canvas.getBoundingClientRect();
 
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
+            // キャンバスの実際のサイズとレンダリングサイズの比率を計算
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
 
-            console.log("Click coordinates:", { x, y });
+            const x = (e.clientX - rect.left) * scaleX;
+            const y = (e.clientY - rect.top) * scaleY;
+
+            console.log("Click coordinates:", { x, y, scaleX, scaleY });
             console.log("Button rect:", button);
 
             if (
