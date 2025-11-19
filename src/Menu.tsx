@@ -43,6 +43,7 @@ export default function Menu({
           gap: "8px",
           cursor: "pointer",
         }}
+        className="game-card"
         onClick={onClick}
         onMouseEnter={(e) => {
           const cardDiv = e.currentTarget.querySelector(
@@ -279,6 +280,8 @@ export default function Menu({
           padding: "0 20px",
           justifyContent: "center",
           margin: "0 auto 30px auto",
+          width: "100%",
+          maxWidth: "420px",
         }}
         className="game-grid"
       >
@@ -363,6 +366,12 @@ export default function Menu({
 
           .game-grid {
             grid-template-columns: 1fr !important;
+            max-width: 100% !important;
+            padding: 0 20px !important;
+          }
+
+          .game-card {
+            max-width: 100% !important;
           }
         }
       `}</style>
