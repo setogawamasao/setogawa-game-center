@@ -208,7 +208,7 @@ export default function Menu({
         background: "#000000",
         position: "relative",
         fontFamily: "'Courier New', monospace",
-        overflow: "hidden",
+        overflow: "auto",
       }}
     >
       {/* スキャンライン効果 */}
@@ -225,44 +225,6 @@ export default function Menu({
           zIndex: 1,
         }}
       />
-
-      {/* インベーダーキャラクター装飾 - 上部左 */}
-      <div
-        style={{
-          position: "absolute",
-          top: "20px",
-          left: "30px",
-          fontSize: "24px",
-          zIndex: 2,
-          animation: "invaderMove 2s ease-in-out infinite",
-          fontFamily: "'Courier New', monospace",
-          color: "#00FF00",
-          textShadow: "0 0 10px #00FF00",
-        }}
-      >
-        ▓▓▓
-        <div style={{ letterSpacing: "3px" }}>▓ ▓</div>
-        ▓▓▓
-      </div>
-
-      {/* インベーダーキャラクター装飾 - 上部右 */}
-      <div
-        style={{
-          position: "absolute",
-          top: "20px",
-          right: "30px",
-          fontSize: "24px",
-          zIndex: 2,
-          animation: "invaderMove 2.5s ease-in-out infinite reverse",
-          fontFamily: "'Courier New', monospace",
-          color: "#FF0080",
-          textShadow: "0 0 10px #FF0080",
-        }}
-      >
-        ▓▓▓
-        <div style={{ letterSpacing: "3px" }}>▓ ▓</div>
-        ▓▓▓
-      </div>
 
       {/* メインタイトル */}
       <div
@@ -357,15 +319,6 @@ export default function Menu({
       </div>
 
       <style>{`
-        @keyframes invaderMove {
-          0%, 100% {
-            transform: translateX(0);
-          }
-          50% {
-            transform: translateX(15px);
-          }
-        }
-
         @keyframes flicker {
           0%, 100% {
             opacity: 1;
