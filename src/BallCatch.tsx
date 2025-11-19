@@ -295,12 +295,18 @@ export default function BallCatch({
         }
 
         ctx2d.fillStyle = "#FFFFFF";
-        ctx2d.font = "bold 48px Arial";
+        ctx2d.font = `bold ${Math.max(
+          20,
+          Math.min(48, displayWidth / 15)
+        )}px Arial`;
         ctx2d.textAlign = "right";
         ctx2d.textBaseline = "top";
         ctx2d.fillText(`Score: ${totalScore}`, displayWidth - 20, 20);
 
-        ctx2d.font = "bold 40px Arial";
+        ctx2d.font = `bold ${Math.max(
+          16,
+          Math.min(40, displayWidth / 18)
+        )}px Arial`;
         ctx2d.fillText(`${remainingTime.toFixed(1)}s`, displayWidth - 20, 80);
 
         if (gameEnded) {
@@ -308,7 +314,10 @@ export default function BallCatch({
           ctx2d.fillRect(0, 0, displayWidth, displayHeight);
 
           ctx2d.fillStyle = "#FFFFFF";
-          ctx2d.font = "bold 80px Arial";
+          ctx2d.font = `bold ${Math.max(
+            40,
+            Math.min(80, displayWidth / 8)
+          )}px Arial`;
           ctx2d.textAlign = "center";
           ctx2d.textBaseline = "middle";
           ctx2d.fillText(
@@ -316,15 +325,18 @@ export default function BallCatch({
             displayWidth / 2,
             displayHeight / 2 - 100
           );
-          ctx2d.font = "bold 60px Arial";
+          ctx2d.font = `bold ${Math.max(
+            30,
+            Math.min(60, displayWidth / 10)
+          )}px Arial`;
           ctx2d.fillText(
             `Final Score: ${finalScore}`,
             displayWidth / 2,
             displayHeight / 2 + 50
           );
 
-          const buttonWidth = 300;
-          const buttonHeight = 80;
+          const buttonWidth = Math.max(200, displayWidth * 0.4);
+          const buttonHeight = Math.max(50, displayHeight * 0.12);
           const buttonX = displayWidth / 2 - buttonWidth / 2;
           const buttonY = displayHeight / 2 + 150;
 
@@ -336,7 +348,10 @@ export default function BallCatch({
           ctx2d.strokeRect(buttonX, buttonY, buttonWidth, buttonHeight);
 
           ctx2d.fillStyle = "#000000";
-          ctx2d.font = "bold 48px Arial";
+          ctx2d.font = `bold ${Math.max(
+            24,
+            Math.min(48, displayWidth / 12)
+          )}px Arial`;
           ctx2d.textAlign = "center";
           ctx2d.textBaseline = "middle";
           ctx2d.fillText(
