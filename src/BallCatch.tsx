@@ -440,17 +440,42 @@ export default function BallCatch({
         onClick={(e) => {
           handleCanvasClick(e);
         }}
-        onTouchStart={(e) => {
+        onTouchEnd={(e) => {
           // iPhoneなどのタッチデバイス対応
-          if (e.touches.length > 0) {
-            const touch = e.touches[0];
-            const clickEvent = new MouseEvent("click", {
-              bubbles: true,
-              cancelable: true,
-              clientX: touch.clientX,
-              clientY: touch.clientY,
-            });
-            canvasRef.current?.dispatchEvent(clickEvent);
+          // touchEndを使用してより確実に検出
+          if (e.changedTouches.length > 0) {
+            const touch = e.changedTouches[0];
+
+            if (!canvasRef.current || isLoading) return;
+            const buttonData = canvasRef.current.dataset.restartButton;
+            if (!buttonData) return;
+
+            try {
+              const button = JSON.parse(buttonData);
+              const canvas = canvasRef.current;
+              const rect = canvas.getBoundingClientRect();
+
+              const scaleX = canvas.width / rect.width;
+              const scaleY = canvas.height / rect.height;
+
+              const x = (touch.clientX - rect.left) * scaleX;
+              const y = (touch.clientY - rect.top) * scaleY;
+
+              console.log("Touch coordinates:", { x, y, scaleX, scaleY });
+              console.log("Button rect:", button);
+
+              if (
+                x >= button.x &&
+                x <= button.x + button.width &&
+                y >= button.y &&
+                y <= button.y + button.height
+              ) {
+                console.log("Restart button touched - restarting game");
+                restartRef.current();
+              }
+            } catch (error) {
+              console.error("Touch handler error:", error);
+            }
           }
         }}
       />
