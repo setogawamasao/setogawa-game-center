@@ -342,7 +342,7 @@ export default function Menu({
         }
 
         .title-container > div:last-child {
-          font-size: clamp(15px, 5vw, 18px);
+          font-size: clamp(17px, 6vw, 20px);
           white-space: nowrap;
         }
 
@@ -357,7 +357,7 @@ export default function Menu({
           }
 
           .title-container > div:last-child {
-            font-size: 15px !important;
+            font-size: 17px !important;
             white-space: nowrap;
           }
 
