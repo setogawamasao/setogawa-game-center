@@ -235,7 +235,9 @@ export default function Menu({
           textAlign: "center",
           padding: "0 20px",
           maxWidth: "100%",
+          width: "100%",
         }}
+        className="title-container"
       >
         <div
           style={{
@@ -246,12 +248,23 @@ export default function Menu({
             fontFamily: "'Courier New', monospace",
             color: "#00FF00",
             textShadow: "0 0 10px #00FF00, 0 0 20px #00FFFF, 0 0 30px #FF0080",
-            whiteSpace: "nowrap",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
+            whiteSpace: "wrap",
+            wordWrap: "break-word",
           }}
         >
           瀬戸川ゲームセンター
+        </div>
+        <div
+          style={{
+            fontSize: "14px",
+            color: "#00FFFF",
+            textShadow: "0 0 5px #00FFFF, 0 0 10px #00FF00",
+            fontFamily: "'Courier New', monospace",
+            letterSpacing: "1px",
+            animation: "blink 1s infinite",
+          }}
+        >
+          TAP VIDEO TO START GAME
         </div>
       </div>
 
@@ -302,22 +315,6 @@ export default function Menu({
         />
       </div>
 
-      {/* ゲーム開始メッセージ */}
-      <div
-        style={{
-          position: "relative",
-          zIndex: 10,
-          fontSize: "14px",
-          color: "#00FFFF",
-          textShadow: "0 0 5px #00FFFF, 0 0 10px #00FF00",
-          fontFamily: "'Courier New', monospace",
-          letterSpacing: "1px",
-          animation: "blink 1s infinite",
-        }}
-      >
-        PRESS START TO CONTINUE
-      </div>
-
       <style>{`
         @keyframes flicker {
           0%, 100% {
@@ -339,7 +336,31 @@ export default function Menu({
           }
         }
 
+        .title-container {
+          max-width: 600px !important;
+          width: auto !important;
+        }
+
+        .title-container > div:last-child {
+          font-size: clamp(13px, 4vw, 16px);
+          white-space: nowrap;
+        }
+
         @media (max-width: 640px) {
+          .title-container {
+            max-width: 100% !important;
+            width: 100% !important;
+          }
+
+          .title-container > div:first-child {
+            font-size: 32px !important;
+          }
+
+          .title-container > div:last-child {
+            font-size: 13px !important;
+            white-space: nowrap;
+          }
+
           .game-grid {
             grid-template-columns: 1fr !important;
           }
