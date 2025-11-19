@@ -30,6 +30,46 @@ export default function BallCatch({
   restartRef,
 }: BallCatchProps) {
   const [isLoading, setIsLoading] = useState(true);
+
+  const handleCanvasClick = (
+    e: React.MouseEvent<HTMLCanvasElement> | MouseEvent
+  ) => {
+    if (!canvasRef.current || isLoading) return;
+    const buttonData = canvasRef.current.dataset.restartButton;
+    if (!buttonData) return;
+
+    try {
+      const button = JSON.parse(buttonData);
+      const canvas = canvasRef.current;
+      const rect = canvas.getBoundingClientRect();
+
+      // キャンバスの実際のサイズとレンダリングサイズの比率を計算
+      const scaleX = canvas.width / rect.width;
+      const scaleY = canvas.height / rect.height;
+
+      const clientX = (e as any).clientX || (e as any).pageX;
+      const clientY = (e as any).clientY || (e as any).pageY;
+
+      const x = (clientX - rect.left) * scaleX;
+      const y = (clientY - rect.top) * scaleY;
+
+      console.log("Click coordinates:", { x, y, scaleX, scaleY });
+      console.log("Button rect:", button);
+
+      if (
+        x >= button.x &&
+        x <= button.x + button.width &&
+        y >= button.y &&
+        y <= button.y + button.height
+      ) {
+        console.log("Button clicked - restarting game");
+        restartRef.current();
+      }
+    } catch (error) {
+      console.error("Click handler error:", error);
+    }
+  };
+
   useEffect(() => {
     let landmarker: HandLandmarker | undefined;
     let stream: MediaStream | undefined;
@@ -398,36 +438,19 @@ export default function BallCatch({
         ref={canvasRef}
         style={{ display: "block", cursor: "pointer" }}
         onClick={(e) => {
-          if (!canvasRef.current || isLoading) return;
-          const buttonData = canvasRef.current.dataset.restartButton;
-          if (!buttonData) return;
-
-          try {
-            const button = JSON.parse(buttonData);
-            const canvas = canvasRef.current;
-            const rect = canvas.getBoundingClientRect();
-
-            // キャンバスの実際のサイズとレンダリングサイズの比率を計算
-            const scaleX = canvas.width / rect.width;
-            const scaleY = canvas.height / rect.height;
-
-            const x = (e.clientX - rect.left) * scaleX;
-            const y = (e.clientY - rect.top) * scaleY;
-
-            console.log("Click coordinates:", { x, y, scaleX, scaleY });
-            console.log("Button rect:", button);
-
-            if (
-              x >= button.x &&
-              x <= button.x + button.width &&
-              y >= button.y &&
-              y <= button.y + button.height
-            ) {
-              console.log("Button clicked - restarting game");
-              restartRef.current();
-            }
-          } catch (error) {
-            console.error("Click handler error:", error);
+          handleCanvasClick(e);
+        }}
+        onTouchStart={(e) => {
+          // iPhoneなどのタッチデバイス対応
+          if (e.touches.length > 0) {
+            const touch = e.touches[0];
+            const clickEvent = new MouseEvent("click", {
+              bubbles: true,
+              cancelable: true,
+              clientX: touch.clientX,
+              clientY: touch.clientY,
+            });
+            canvasRef.current?.dispatchEvent(clickEvent);
           }
         }}
       />
