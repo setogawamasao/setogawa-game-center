@@ -1,3 +1,5 @@
+import React, { useState } from "react";
+
 interface MenuProps {
   onStart: () => void;
   onHandLandmark: () => void;
@@ -9,6 +11,7 @@ export default function Menu({
   onHandLandmark: onHandFilter,
   onNew,
 }: MenuProps) {
+  const [isInfoOpen, setIsInfoOpen] = useState(false);
   const colors = [
     { bg: "#001100", color: "#00FF00", glow: "#00FF00" }, // グリーン
     { bg: "#000011", color: "#00FFFF", glow: "#00FFFF" }, // シアン
@@ -213,6 +216,80 @@ export default function Menu({
         overflowX: "hidden",
       }}
     >
+      {/* ポップアップウィンドウ */}
+      {isInfoOpen && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: "rgba(0, 0, 0, 0.8)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 1000,
+          }}
+          onClick={() => setIsInfoOpen(false)}
+        >
+          <div
+            style={{
+              backgroundColor: "#001100",
+              border: "3px solid #00FF00",
+              borderRadius: "8px",
+              padding: "30px",
+              maxWidth: "600px",
+              width: "90%",
+              maxHeight: "70vh",
+              overflow: "auto",
+              boxShadow: "0 0 30px #00FF00",
+              color: "#00FF00",
+              fontFamily: "'Courier New', monospace",
+              textShadow: "0 0 10px #00FF00",
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div
+              style={{
+                fontSize: "24px",
+                fontWeight: "bold",
+                marginBottom: "20px",
+                textAlign: "center",
+              }}
+            >
+              はじめに
+            </div>
+            <div style={{ fontSize: "14px", lineHeight: "1.8", color: "#00FFFF" }}>
+              <p>手や顔の動きをカメラで読み取って操作するゲームです。</p>
+              <p>
+                カメラ映像はあくまでゲーム内の動作認識にのみ利用しており、外部へ送信されることはありません。
+              </p>
+              <p>動画を押してゲームを始めてね！</p>
+            </div>
+            <button
+              onClick={() => setIsInfoOpen(false)}
+              style={{
+                marginTop: "20px",
+                backgroundColor: "#00FF00",
+                color: "#000000",
+                border: "2px solid #00FFFF",
+                padding: "10px 20px",
+                fontSize: "14px",
+                fontWeight: "bold",
+                fontFamily: "'Courier New', monospace",
+                cursor: "pointer",
+                borderRadius: "4px",
+                boxShadow: "0 0 10px #00FF00",
+                width: "100%",
+              }}
+            >
+              閉じる
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* スキャンライン効果 */}
       <div
         style={{
@@ -233,14 +310,12 @@ export default function Menu({
         style={{
           position: "relative",
           zIndex: 10,
-          textAlign: "center",
-          padding: "0 20px",
           marginBottom: "50px",
-          maxWidth: "95vw",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          gap: "8px",
+          gap: "16px",
+          width: "100%",
         }}
         className="title-container"
       >
@@ -253,23 +328,37 @@ export default function Menu({
             color: "#00FF00",
             textShadow: "0 0 10px #00FF00, 0 0 20px #00FFFF, 0 0 30px #FF0080",
             whiteSpace: "nowrap",
+            textAlign: "center",
           }}
         >
           瀬戸川ゲームセンター
         </div>
-        <div
+        <button
+          onClick={() => setIsInfoOpen(true)}
           style={{
-            fontSize: "clamp(14px, 4vw, 18px)",
-            color: "#00FFFF",
-            textShadow: "0 0 5px #00FFFF, 0 0 10px #00FF00",
+            backgroundColor: "#00FF00",
+            color: "#000000",
+            border: "2px solid #00FFFF",
+            padding: "8px 16px",
+            fontSize: "14px",
+            fontWeight: "bold",
             fontFamily: "'Courier New', monospace",
-            letterSpacing: "1px",
-            animation: "blink 1s infinite",
-            whiteSpace: "nowrap",
+            cursor: "pointer",
+            borderRadius: "4px",
+            boxShadow: "0 0 10px #00FF00",
+            transition: "all 0.2s",
+          }}
+          onMouseEnter={(e) => {
+            (e.currentTarget as HTMLButtonElement).style.boxShadow = "0 0 20px #00FF00, 0 0 10px #00FFFF";
+            (e.currentTarget as HTMLButtonElement).style.transform = "scale(1.05)";
+          }}
+          onMouseLeave={(e) => {
+            (e.currentTarget as HTMLButtonElement).style.boxShadow = "0 0 10px #00FF00";
+            (e.currentTarget as HTMLButtonElement).style.transform = "scale(1)";
           }}
         >
-          TAP VIDEO TO START GAME
-        </div>
+          はじめに
+        </button>
       </div>
 
       {/* ゲームグリッド */}
