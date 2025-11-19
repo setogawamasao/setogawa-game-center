@@ -133,15 +133,12 @@ export default function BallCatch({
       let startTime = Date.now();
       const gameDuration = 10000;
       let gameEnded = false;
-      let finalScore = 0;
-      let buttonRect = { x: 0, y: 0, width: 0, height: 0 };
 
       const restart = () => {
         frameCount = 0;
         totalScore = 0;
         startTime = Date.now();
         gameEnded = false;
-        finalScore = 0;
         balls.length = 0;
         setGameEnded(false);
         setFinalScore(0);
@@ -213,10 +210,8 @@ export default function BallCatch({
 
         const elapsedTime = Date.now() - startTime;
         const remainingTime = Math.max(0, (gameDuration - elapsedTime) / 1000);
-
         if (!gameEnded && elapsedTime >= gameDuration) {
           gameEnded = true;
-          finalScore = totalScore;
           setGameEnded(true);
           setFinalScore(totalScore);
         }
@@ -354,66 +349,6 @@ export default function BallCatch({
           Math.min(40, displayWidth / 18)
         )}px Arial`;
         ctx2d.fillText(`${remainingTime.toFixed(1)}s`, displayWidth - 20, 80);
-
-        if (gameEnded) {
-          ctx2d.fillStyle = "rgba(0, 0, 0, 0.7)";
-          ctx2d.fillRect(0, 0, displayWidth, displayHeight);
-
-          ctx2d.fillStyle = "#FFFFFF";
-          ctx2d.font = `bold ${Math.max(
-            40,
-            Math.min(80, displayWidth / 8)
-          )}px Arial`;
-          ctx2d.textAlign = "center";
-          ctx2d.textBaseline = "middle";
-          ctx2d.fillText(
-            `GAME OVER`,
-            displayWidth / 2,
-            displayHeight / 2 - 100
-          );
-          ctx2d.font = `bold ${Math.max(
-            30,
-            Math.min(60, displayWidth / 10)
-          )}px Arial`;
-          ctx2d.fillText(
-            `Final Score: ${finalScore}`,
-            displayWidth / 2,
-            displayHeight / 2 + 50
-          );
-
-          const buttonWidth = Math.max(200, displayWidth * 0.4);
-          const buttonHeight = Math.max(50, displayHeight * 0.12);
-          const buttonX = displayWidth / 2 - buttonWidth / 2;
-          const buttonY = displayHeight / 2 + 150;
-
-          ctx2d.fillStyle = "#00FF00";
-          ctx2d.fillRect(buttonX, buttonY, buttonWidth, buttonHeight);
-
-          ctx2d.strokeStyle = "#FFFFFF";
-          ctx2d.lineWidth = 3;
-          ctx2d.strokeRect(buttonX, buttonY, buttonWidth, buttonHeight);
-
-          ctx2d.fillStyle = "#000000";
-          ctx2d.font = `bold ${Math.max(
-            24,
-            Math.min(48, displayWidth / 12)
-          )}px Arial`;
-          ctx2d.textAlign = "center";
-          ctx2d.textBaseline = "middle";
-          ctx2d.fillText(
-            "RESTART",
-            displayWidth / 2,
-            buttonY + buttonHeight / 2
-          );
-
-          buttonRect = {
-            x: buttonX,
-            y: buttonY,
-            width: buttonWidth,
-            height: buttonHeight,
-          };
-          canvasRef.current!.dataset.restartButton = JSON.stringify(buttonRect);
-        }
 
         requestAnimationFrame(detect);
       };
