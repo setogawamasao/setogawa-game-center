@@ -260,7 +260,9 @@ export default function Menu({
             >
               はじめに
             </div>
-            <div style={{ fontSize: "14px", lineHeight: "1.8", color: "#00FFFF" }}>
+            <div
+              style={{ fontSize: "14px", lineHeight: "1.8", color: "#00FFFF" }}
+            >
               <p>手や顔の動きをカメラで読み取って操作するゲームです。</p>
               <p>
                 カメラ映像はあくまでゲーム内の動作認識にのみ利用しており、外部へ送信されることはありません。
@@ -349,11 +351,14 @@ export default function Menu({
             transition: "all 0.2s",
           }}
           onMouseEnter={(e) => {
-            (e.currentTarget as HTMLButtonElement).style.boxShadow = "0 0 20px #00FF00, 0 0 10px #00FFFF";
-            (e.currentTarget as HTMLButtonElement).style.transform = "scale(1.05)";
+            (e.currentTarget as HTMLButtonElement).style.boxShadow =
+              "0 0 20px #00FF00, 0 0 10px #00FFFF";
+            (e.currentTarget as HTMLButtonElement).style.transform =
+              "scale(1.05)";
           }}
           onMouseLeave={(e) => {
-            (e.currentTarget as HTMLButtonElement).style.boxShadow = "0 0 10px #00FF00";
+            (e.currentTarget as HTMLButtonElement).style.boxShadow =
+              "0 0 10px #00FF00";
             (e.currentTarget as HTMLButtonElement).style.transform = "scale(1)";
           }}
         >
