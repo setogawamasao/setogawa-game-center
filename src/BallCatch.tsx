@@ -30,6 +30,8 @@ export default function BallCatch({
   restartRef,
 }: BallCatchProps) {
   const [isLoading, setIsLoading] = useState(true);
+  const [gameEnded, setGameEnded] = useState(false);
+  const [finalScore, setFinalScore] = useState(0);
 
   const handleCanvasClick = (
     e: React.MouseEvent<HTMLCanvasElement> | MouseEvent
@@ -141,6 +143,8 @@ export default function BallCatch({
         gameEnded = false;
         finalScore = 0;
         balls.length = 0;
+        setGameEnded(false);
+        setFinalScore(0);
       };
 
       restartRef.current = restart;
@@ -213,6 +217,8 @@ export default function BallCatch({
         if (!gameEnded && elapsedTime >= gameDuration) {
           gameEnded = true;
           finalScore = totalScore;
+          setGameEnded(true);
+          setFinalScore(totalScore);
         }
 
         const ts = performance.now();
@@ -440,46 +446,7 @@ export default function BallCatch({
         onClick={(e) => {
           handleCanvasClick(e);
         }}
-        onTouchEnd={(e) => {
-          // iPhoneなどのタッチデバイス対応
-          // touchEndを使用してより確実に検出
-          if (e.changedTouches.length > 0) {
-            const touch = e.changedTouches[0];
-
-            if (!canvasRef.current || isLoading) return;
-            const buttonData = canvasRef.current.dataset.restartButton;
-            if (!buttonData) return;
-
-            try {
-              const button = JSON.parse(buttonData);
-              const canvas = canvasRef.current;
-              const rect = canvas.getBoundingClientRect();
-
-              const scaleX = canvas.width / rect.width;
-              const scaleY = canvas.height / rect.height;
-
-              const x = (touch.clientX - rect.left) * scaleX;
-              const y = (touch.clientY - rect.top) * scaleY;
-
-              console.log("Touch coordinates:", { x, y, scaleX, scaleY });
-              console.log("Button rect:", button);
-
-              if (
-                x >= button.x &&
-                x <= button.x + button.width &&
-                y >= button.y &&
-                y <= button.y + button.height
-              ) {
-                console.log("Restart button touched - restarting game");
-                restartRef.current();
-              }
-            } catch (error) {
-              console.error("Touch handler error:", error);
-            }
-          }
-        }}
-      />
-
+      />{" "}
       {/* パックマン風の戻るボタン */}
       <button
         onClick={() => {
@@ -518,7 +485,6 @@ export default function BallCatch({
       >
         ←
       </button>
-
       {/* ローディング画面 */}
       {isLoading && (
         <div
@@ -583,6 +549,75 @@ export default function BallCatch({
               }
             }
           `}</style>
+        </div>
+      )}
+      {/* ゲーム終了オーバーレイ */}
+      {gameEnded && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: "rgba(0, 0, 0, 0.7)",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 999,
+          }}
+        >
+          <div
+            style={{
+              fontSize: "clamp(32px, 10vw, 60px)",
+              color: "#FFFFFF",
+              fontWeight: "bold",
+              marginBottom: "20px",
+              textShadow: "0 0 10px #00FF00",
+            }}
+          >
+            GAME OVER
+          </div>
+          <div
+            style={{
+              fontSize: "clamp(24px, 8vw, 48px)",
+              color: "#00FFFF",
+              fontWeight: "bold",
+              marginBottom: "40px",
+              textShadow: "0 0 10px #00FFFF",
+            }}
+          >
+            Score: {finalScore}
+          </div>
+          <button
+            onClick={() => {
+              restartRef.current();
+            }}
+            style={{
+              padding: "clamp(12px, 3vw, 20px) clamp(24px, 6vw, 40px)",
+              fontSize: "clamp(18px, 5vw, 28px)",
+              fontWeight: "bold",
+              backgroundColor: "#00FF00",
+              color: "#000000",
+              border: "3px solid #FFFFFF",
+              borderRadius: "8px",
+              cursor: "pointer",
+              boxShadow: "0 0 20px #00FF00",
+              transition: "all 0.2s",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = "scale(1.1)";
+              e.currentTarget.style.boxShadow =
+                "0 0 30px #00FF00, 0 0 10px #00FFFF";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = "scale(1)";
+              e.currentTarget.style.boxShadow = "0 0 20px #00FF00";
+            }}
+          >
+            RESTART
+          </button>
         </div>
       )}
     </div>
