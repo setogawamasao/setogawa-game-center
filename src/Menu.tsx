@@ -37,7 +37,7 @@ export default function Menu({
         style={{
           position: "relative",
           width: "100%",
-          maxWidth: "180px",
+          maxWidth: "200px",
           display: "flex",
           flexDirection: "column",
           gap: "8px",
@@ -198,18 +198,19 @@ export default function Menu({
   return (
     <div
       style={{
-        width: "100%",
+        width: "100vw",
         height: "100%",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "flex-start",
-        padding: "30px 20px",
+        padding: "30px 0",
         boxSizing: "border-box",
         background: "#000000",
         position: "relative",
         fontFamily: "'Courier New', monospace",
         overflow: "auto",
+        overflowX: "hidden",
       }}
     >
       {/* スキャンライン効果 */}
@@ -232,37 +233,39 @@ export default function Menu({
         style={{
           position: "relative",
           zIndex: 10,
-          marginBottom: "50px",
           textAlign: "center",
           padding: "0 20px",
-          maxWidth: "100%",
-          width: "100%",
+          marginBottom: "50px",
+          maxWidth: "95vw",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: "8px",
         }}
         className="title-container"
       >
         <div
           style={{
-            fontSize: "clamp(16px, 6vw, 36px)",
+            fontSize: "clamp(24px, 8vw, 40px)",
             fontWeight: "bold",
             letterSpacing: "clamp(0.5px, 0.3vw, 3px)",
-            marginBottom: "8px",
             fontFamily: "'Courier New', monospace",
             color: "#00FF00",
             textShadow: "0 0 10px #00FF00, 0 0 20px #00FFFF, 0 0 30px #FF0080",
-            whiteSpace: "wrap",
-            wordWrap: "break-word",
+            whiteSpace: "nowrap",
           }}
         >
           瀬戸川ゲームセンター
         </div>
         <div
           style={{
-            fontSize: "14px",
+            fontSize: "clamp(14px, 4vw, 18px)",
             color: "#00FFFF",
             textShadow: "0 0 5px #00FFFF, 0 0 10px #00FF00",
             fontFamily: "'Courier New', monospace",
             letterSpacing: "1px",
             animation: "blink 1s infinite",
+            whiteSpace: "nowrap",
           }}
         >
           TAP VIDEO TO START GAME
@@ -271,19 +274,16 @@ export default function Menu({
 
       {/* ゲームグリッド */}
       <div
+        className="game-grid"
         style={{
           position: "relative",
           zIndex: 10,
           display: "grid",
-          gridTemplateColumns: "repeat(2, 180px)",
-          gap: "20px",
-          padding: "0 20px",
-          justifyContent: "center",
-          margin: "0 auto 30px auto",
           width: "100%",
-          maxWidth: "420px",
+          padding: "0 20px",
+          boxSizing: "border-box",
+          justifyItems: "center",
         }}
-        className="game-grid"
       >
         <GameCard
           title="BALL CATCH"
@@ -339,39 +339,30 @@ export default function Menu({
           }
         }
 
-        .title-container {
-          max-width: 600px !important;
-          width: auto !important;
+        /* PC用: 画面幅に対応する動的列数 */
+        .game-grid {
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+          gap: 20px;
+          max-width: 90vw;
+          width: calc(100vw - 40px);
         }
 
-        .title-container > div:last-child {
-          font-size: clamp(17px, 6vw, 20px);
-          white-space: nowrap;
+        .game-card {
+          width: 100%;
         }
 
+        /* スマホ用: 1列グリッド */
         @media (max-width: 640px) {
-          .title-container {
-            max-width: 100% !important;
-            width: 100% !important;
-          }
-
-          .title-container > div:first-child {
-            font-size: 32px !important;
-          }
-
-          .title-container > div:last-child {
-            font-size: 17px !important;
-            white-space: nowrap;
-          }
-
           .game-grid {
-            grid-template-columns: 1fr !important;
-            max-width: 100% !important;
-            padding: 0 20px !important;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            max-width: 100%;
+            width: calc(100vw - 40px);
           }
 
           .game-card {
-            max-width: 100% !important;
+            width: 100%;
+            max-width: none;
           }
         }
       `}</style>
