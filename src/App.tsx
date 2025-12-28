@@ -6,9 +6,9 @@ import {
   useNavigate,
 } from "react-router-dom";
 import Menu from "./Menu";
-import BallCatch from "./BallCatch";
-import HandFilter from "./HandFilter";
-import NoseProtectionGame from "./NoseProtectionGame";
+import BallCatch from "./games/BallCatch/BallCatch";
+import HandFilter from "./games/HandFilter/HandFilter";
+import NoseProtectionGame from "./games/NoseProtectionGame/NoseProtectionGame";
 
 function AppContent() {
   const videoRef = useRef<HTMLVideoElement>(null);
